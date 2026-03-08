@@ -1,6 +1,12 @@
 package ccamanager.parser;
 
-import ccamanager.command.*;
+import ccamanager.command.AddCcaCommand;
+import ccamanager.command.Command;
+import ccamanager.command.DeleteCcaCommand;
+import ccamanager.command.ExitCommand;
+import ccamanager.command.UnknownCommand;
+import ccamanager.command.ViewCcaCommand;
+import ccamanager.command.ViewResidentCommand;
 
 /**
  * Parser — reads raw user input and returns the appropriate Command object.
