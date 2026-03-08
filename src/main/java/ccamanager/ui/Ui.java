@@ -78,11 +78,22 @@ public class Ui {
         }
         System.out.println(DIVIDER);
     }
+
     /**
      * Prints the full list of residents.
      * @param residentList the list to display
      */
-    public void printResidentList(ArrayList<Resident> residentList) {
-        throw new UnsupportedOperationException("printResidentList() not implemented yet");
+    public void showResidentList(ArrayList<Resident> residentList) {
+        System.out.println(DIVIDER);
+        if (residentList.isEmpty()) {
+            showMessage("There are no residents currently. Please add residents using add-resident command");
+        } else {
+            System.out.println("Here is the complete list of all the residents :");
+            for(int i = 1; i < residentList.size() + 1; i++) {
+                Resident resident = residentList.get(i-1);
+                System.out.println(i + ". " + resident);
+            }
+        }
+        System.out.println(DIVIDER);
     }
 }

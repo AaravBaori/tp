@@ -1,10 +1,6 @@
 package ccamanager.parser;
 
-import ccamanager.command.AddCcaCommand;
-import ccamanager.command.Command;
-import ccamanager.command.UnknownCommand;
-import ccamanager.command.ViewCcaCommand;
-import ccamanager.command.ExitCommand;
+import ccamanager.command.*;
 
 /**
  * Parser — reads raw user input and returns the appropriate Command object.
@@ -36,6 +32,9 @@ public class Parser {
 
         case "bye":
             return new ExitCommand();
+
+        case "view-resident":
+            return new ViewResidentCommand();
 
         default:
             return new UnknownCommand();
