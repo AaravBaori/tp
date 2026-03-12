@@ -36,6 +36,10 @@ public class Cca {
         this.name = name;
     }
 
+    /**
+     * Add resident to a CCA
+     * @param resident the resident to be added
+     */
     public void addResidentToCca(Resident resident) {
         registeredResidents.add(resident);
     }

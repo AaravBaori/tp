@@ -14,6 +14,11 @@ public class ResidentManager {
         residents = new ArrayList<>();
     }
 
+    /**
+     * Create a new resident object
+     * @param residentName name of the resident
+     * @param matricNumber unique matric number for the resident
+     */
     public static void addResident(String residentName, String matricNumber) {
         Resident resident  = new Resident(residentName,matricNumber);
         residents.add(resident);
