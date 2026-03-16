@@ -20,6 +20,7 @@ public class AddResidentToCcaCommand extends Command {
     private final int pointsScored;
 
     public AddResidentToCcaCommand(String matriculationNo, String ccaName, String pointsScored) {
+        assert Integer.parseInt(pointsScored) >= 0 : "Points scored must be greater than or equal to 0";
         this.matriculationNo = matriculationNo;
         this.ccaName = ccaName;
         this.pointsScored = Integer.parseInt(pointsScored);

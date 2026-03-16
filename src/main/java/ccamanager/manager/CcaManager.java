@@ -20,6 +20,7 @@ public class CcaManager {
      * @param ccaName Name of the CCA
      */
     public void addCCA(String ccaName) throws DuplicateCcaException {
+        assert ccaList != null : "ccaList should be initialized";
         boolean isDuplicate = ccaList.stream()
                 .anyMatch(x -> x.getName().equalsIgnoreCase(ccaName));
         if (isDuplicate) {
@@ -34,6 +35,7 @@ public class CcaManager {
      * @return List of CCAs
      */
     public ArrayList<Cca> getCCAList() {
+        assert ccaList != null : "ccaList should be initialized";
         return ccaList;
     }
 
@@ -43,7 +45,6 @@ public class CcaManager {
      * @throws CcaNotFoundException Exception if invalid CCA name is given
      */
     public void deleteCca(String ccaName) throws CcaNotFoundException {
-
         for (int i = 0; i < ccaList.size(); i++) {
             if (ccaList.get(i).getName().equals(ccaName)) {
                 ccaList.remove(i);
