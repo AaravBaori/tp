@@ -3,7 +3,6 @@ package ccamanager.model;
 import java.util.ArrayList;
 
 import ccamanager.exceptions.ResidentAlreadyInCcaException;
-import ccamanager.manager.ResidentManager;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,13 +13,13 @@ import java.util.logging.Logger;
  * Add new fields (e.g. description, category) here if needed; logic goes in CcaManager.
  */
 public class Cca {
+    private static final Logger logger = Logger.getLogger(Cca.class.getName());
 
     /**
      * The display name of this CCA.
      */
     private String name;
     private ArrayList<Resident> registeredResidents = new ArrayList<Resident>();
-    private static final Logger logger = Logger.getLogger(Cca.class.getName());
 
 
     /**
