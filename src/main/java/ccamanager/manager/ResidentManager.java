@@ -28,6 +28,7 @@ public class ResidentManager {
         boolean isDuplicate = residents.stream()
                 .anyMatch(x -> x.getMatricNumber().equalsIgnoreCase(matricNumber));
         if (isDuplicate) {
+            logger.log(Level.WARNING,"Resident with the same matric number " + matricNumber + " already exists.");
             throw new DuplicateResidentException("Resident with matric number " + matricNumber + " already exists.");
         }
         residents.add(new Resident(residentName, matricNumber));
@@ -40,6 +41,6 @@ public class ResidentManager {
      * @return List of residents
      */
     public ArrayList<Resident> getResidentList() {
-        return this.residents;
+        return residents;
     }
 }

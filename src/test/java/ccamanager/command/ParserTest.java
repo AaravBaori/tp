@@ -1,12 +1,7 @@
-package ccamanager.parser;
+package ccamanager.command;
 
-import ccamanager.command.UnknownCommand;
-import ccamanager.command.AddCcaCommand;
-import ccamanager.command.ViewCcaCommand;
-import ccamanager.command.DeleteCcaCommand;
-import ccamanager.command.ExitCommand;
-import ccamanager.command.AddResidentCommand;
-import ccamanager.command.AddResidentToCcaCommand;
+
+import ccamanager.parser.Parser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,6 +47,11 @@ public class ParserTest {
     }
 
     @Test
+    void parse_viewResident_success() {
+        assertInstanceOf(ViewResidentCommand.class, parser.parse("view-resident"));
+    }
+
+    @Test
     void parse_addResident_success() {
         assertInstanceOf(AddResidentCommand.class, parser.parse("add-resident John A1234567B"));
     }
@@ -77,6 +77,14 @@ public class ParserTest {
         assertInstanceOf(UnknownCommand.class,
                 parser.parse("add-resident-to-cca A1234567B Basketball"));
     }
+
+    @Test
+    void parse_addResident_blankName() {
+        Command command = parser.parse("add-resident  A123");
+
+        assertInstanceOf(UnknownCommand.class, command);
+    }
+
 
     @Test
     void parse_unknownCommand() {

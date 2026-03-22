@@ -20,12 +20,15 @@ public class CcaManager {
      * @param ccaName Name of the CCA
      */
     public void addCCA(String ccaName) throws DuplicateCcaException {
-        assert ccaName != null : "CCA name should not be null";
+        logger.log(Level.INFO,"Attempting to add CCA: " + ccaName);
+
         assert !ccaName.isBlank() : "CCA name should not be blank";
         assert ccaList != null : "ccaList should be initialized";
+
         boolean isDuplicate = ccaList.stream()
                 .anyMatch(x -> x.getName().equalsIgnoreCase(ccaName));
         if (isDuplicate) {
+            logger.log(Level.WARNING,"Failed to add CCA (duplicate) :" + ccaName);
             throw new DuplicateCcaException("CCA " + ccaName + " already exists.");
         }
         int oldSize = ccaList.size();
@@ -50,9 +53,13 @@ public class CcaManager {
      * @throws CcaNotFoundException Exception if invalid CCA name is given
      */
     public void deleteCca(String ccaName) throws CcaNotFoundException {
+
+        logger.log(Level.INFO,"Attempted to delete CCA: {0}", ccaName);
+
         assert ccaList != null : "ccaList should be initialized";
         assert ccaName != null : "CCA name should not be null";
         assert !ccaName.isBlank() : "CCA name should not be blank";
+
         for (int i = 0; i < ccaList.size(); i++) {
             if (ccaList.get(i).getName().equals(ccaName)) {
                 int oldSize = ccaList.size();
@@ -63,7 +70,7 @@ public class CcaManager {
                 return;
             }
         }
-        logger.log(Level.WARNING, "Failed to delete CCA: {0}. Not found in list.", ccaName);
+        logger.log(Level.WARNING, "Failed to delete CCA: {0}. (Not an exisitng CCA).", ccaName);
         throw new CcaNotFoundException("The CCA " + ccaName + " does not exist, please enter a valid CCA name.");
     }
 }
