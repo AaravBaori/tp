@@ -6,7 +6,55 @@
 
 ## Design & implementation
 
-{Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
+# CCA Manager
+
+
+## Add CCA Command
+
+### Overview
+
+The `add-cca` command adds a new CCA to the system.
+
+Format:
+`add-cca <cca name>`
+
+---
+
+### Implementation
+
+The `add-cca` command is implemented using the Command pattern.
+
+- The `Parser` creates an `AddCcaCommand` object from user input.
+- `AddCcaCommand.execute()` calls `CcaManager.addCCA(...)`.
+- If the CCA already exists, a `DuplicateCcaException` is thrown and handled.
+
+```java
+@Override
+public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+    try {
+        ccaManager.addCCA(ccaName);
+        ui.showMessage("CCA added: " + ccaName);
+    } catch (DuplicateCcaException e) {
+        ui.showError(e.getMessage());
+    }
+}
+```
+### Sequeunce Diagram
+<img width="550" height="381" alt="AddCca" src="https://github.com/user-attachments/assets/6eed8ab5-d334-45ed-8d02-1769cb8416b6" />
+
+
+### Design Considerations
+
+- Command pattern is used to separate parsing and execution.
+- Exception handling is used to manage duplicate CCA cases cleanly
+
+### Alternatives Considered
+1. Direct Invocation from Parser to Manager
+   Approach: Parser directly calls `CcaManager.addCCA(...)`
+   Rejected because:
+- Violates separation of concerns
+- Makes Parser overly complex
+- Reduces extensibility
 
 
 ## Product scope
