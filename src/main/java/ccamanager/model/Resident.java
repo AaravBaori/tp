@@ -69,6 +69,14 @@ public class Resident {
         return matricNumber;
     }
 
+    public ArrayList<Cca> getCcas(){
+        return ccaRegisteredIn;
+    }
+
+    public ArrayList<Integer> getPoints(){
+        return points;
+    }
+
     @Override
     public String toString() {
         return name + " | " + matricNumber;

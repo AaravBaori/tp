@@ -1,14 +1,6 @@
 package ccamanager.parser;
 
-import ccamanager.command.AddCcaCommand;
-import ccamanager.command.AddResidentCommand;
-import ccamanager.command.AddResidentToCcaCommand;
-import ccamanager.command.Command;
-import ccamanager.command.DeleteCcaCommand;
-import ccamanager.command.ExitCommand;
-import ccamanager.command.UnknownCommand;
-import ccamanager.command.ViewCcaCommand;
-import ccamanager.command.ViewResidentCommand;
+import ccamanager.command.*;
 
 /**
  * Parser — reads raw user input and returns the appropriate Command object.
@@ -85,7 +77,8 @@ public class Parser {
                 return new UnknownCommand("Points cannot be empty.");
             }
             return new AddResidentToCcaCommand(parts[1], parts[2], parts[3]);
-
+        case "view-points":
+            return new ViewPointsCommand();
         default:
             return new UnknownCommand();
         }

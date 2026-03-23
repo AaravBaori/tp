@@ -103,6 +103,24 @@ public class Ui {
         }
         System.out.println(DIVIDER);
     }
+    public void showCcaPoints(ArrayList<Resident> residentList){
+        System.out.println(DIVIDER);
+        if (residentList.isEmpty()) {
+            showMessage("There are no residents currently. Please add residents using add-resident command");
+        } else {
+            System.out.println("Here is the complete list of all the residents :");
+            for(int i = 1; i < residentList.size() + 1; i++) {
+                Resident resident = residentList.get(i-1);
+                ArrayList<Cca> residentCcas= resident.getCcas();
+                ArrayList<Integer> residentPoints = resident.getPoints();
+                System.out.println(i + ". " + resident );
+                for(int j = 0; j<residentCcas.size();j++){
+                    System.out.println(residentCcas.get(j)+" "+residentPoints.get(j));
+                }
+            }
+        }
+        System.out.println(DIVIDER);
+    }
 
 
     public String getLastMessage() {
