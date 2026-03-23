@@ -10,6 +10,4 @@ public class Main {
         assert false : "dummy assertion set to fail";
         new CcaLedger().run();
     }
-
-
 }
