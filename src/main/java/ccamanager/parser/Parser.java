@@ -10,12 +10,19 @@ import ccamanager.command.DeleteCcaCommand;
 import ccamanager.command.ViewCcaCommand;
 import ccamanager.command.ViewResidentCommand;
 import ccamanager.command.ViewPointsCommand;
+import ccamanager.enumerations.CcaLevel;
+import ccamanager.model.Cca;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Parser — reads raw user input and returns the appropriate Command object.
  **/
 
 public class Parser {
+
+    private static final Logger logger = Logger.getLogger(Parser.class.getName());
 
     /**
      * Parses the user's input string and returns the matching Command.
@@ -39,10 +46,12 @@ public class Parser {
 
         switch (commandWord) {
         case "add-cca":
-            if (parts.length < 2 || parts[1].isBlank()) {
-                return new UnknownCommand("Usage: add-cca <cca name>");
+            if (parts.length < 3 || parts[1].isBlank() || parts[2].isBlank()) {
+                return new UnknownCommand("Usage: add-cca <cca name> <level>");
             }
-            return new AddCcaCommand(getCcaName(input));
+            String name = parts[1];
+            CcaLevel level = getCcaLevel(parts[2]);
+            return new AddCcaCommand(name, level);
 
         case "view-cca":
             return new ViewCcaCommand();
@@ -52,7 +61,7 @@ public class Parser {
                 return new UnknownCommand("Usage: delete-cca <cca name>");
             }
 
-            return new DeleteCcaCommand(getCcaName(input));
+            return new DeleteCcaCommand(parts[1]);
 
         case "bye":
             return new ExitCommand();
@@ -93,16 +102,13 @@ public class Parser {
         }
     }
 
-    /**
-     * Extracts out the name of the CCA from the command given
-     * @param input input text given by the user
-     * @return CCA name as a string
-     */
-    String getCcaName(String input) {
-        String[] parts = input.split(" ", 2);
-        if (parts.length < 2) {
-            return "";
+    static CcaLevel getCcaLevel(String ccaLevel){
+        try {
+            return CcaLevel.valueOf(ccaLevel.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // Handle case where user typed "super-high" or something invalid
+            logger.log(Level.WARNING, "Invalid CCA level entered: " + ccaLevel);
         }
-        return parts[1];
+        return CcaLevel.UNKNOWN;
     }
 }

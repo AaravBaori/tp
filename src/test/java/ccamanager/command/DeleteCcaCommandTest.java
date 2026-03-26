@@ -1,5 +1,6 @@
 package ccamanager.command;
 
+import ccamanager.enumerations.CcaLevel;
 import ccamanager.manager.CcaManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.ui.Ui;
@@ -23,15 +24,16 @@ public class DeleteCcaCommandTest {
 
     @Test
     void execute_deleteCca_success() {
-        new AddCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
+        new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, ui);
         new DeleteCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
         assertEquals(0, ccaManager.getCCAList().size());
+        assertEquals("CCA deleted: Basketball", ui.getLastMessage());
     }
 
     @Test
     void execute_deleteCca_invalidName() {
         new DeleteCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
-        assertEquals("The CCA Basketball does not exist, please enter a valid CCA name.",
+        assertEquals("Error: The CCA Basketball does not exist, please enter a valid CCA name.",
                 ui.getLastMessage());
     }
 
@@ -39,7 +41,7 @@ public class DeleteCcaCommandTest {
     void execute_deleteCca_emptyList() {
         new DeleteCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
         assertEquals(0, ccaManager.getCCAList().size());
-        assertEquals("The CCA Basketball does not exist, please enter a valid CCA name.",
+        assertEquals("Error: The CCA Basketball does not exist, please enter a valid CCA name.",
                 ui.getLastMessage());
     }
 }

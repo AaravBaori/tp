@@ -1,27 +1,40 @@
 package ccamanager.command;
 
+import ccamanager.enumerations.CcaLevel;
 import ccamanager.manager.CcaManager;
 import ccamanager.manager.ResidentManager;
+import ccamanager.model.Cca;
 import ccamanager.ui.Ui;
 
 import ccamanager.exceptions.DuplicateCcaException;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Command to create and add a new CCA to the CCA manager
  */
 public class AddCcaCommand extends Command {
+    private static final Logger logger = Logger.getLogger(AddCcaCommand.class.getName());
     private String ccaName;
+    private CcaLevel ccaLevel;
 
-    public AddCcaCommand(String ccaName) {
-        assert ccaName != null : "CCA name should not be null";
-        this.ccaName = ccaName;
+    public AddCcaCommand(String name, CcaLevel level) {
+        assert name != null && !name.isBlank() : "CCA name cannot be null or empty";
+        assert level != null : "CCA level cannot be null";
+
+        this.ccaName = name;
+        this.ccaLevel = level;
+
+        logger.log(Level.INFO, "Created AddCcaCommand for {0} with level {1}",
+                new Object[]{ccaName, ccaLevel});
     }
 
     @Override
     public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
         try {
-            ccaManager.addCCA(ccaName);
-            ui.showMessage("CCA added: " + ccaName);
+            ccaManager.addCCA(ccaName, ccaLevel);
+            ui.showMessage("CCA added: " + ccaName + "(" + ccaLevel + ")");
         } catch (DuplicateCcaException e) {
             ui.showError(e.getMessage());
         }

@@ -1,5 +1,6 @@
 package ccamanager.command;
 
+import ccamanager.enumerations.CcaLevel;
 import ccamanager.manager.CcaManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.ui.Ui;
@@ -23,24 +24,36 @@ public class AddCcaCommandTest {
 
     @Test
     void execute_addCca_success() {
-        new AddCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
+        new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, ui);
+
         assertEquals(1, ccaManager.getCCAList().size());
         assertEquals("Basketball", ccaManager.getCCAList().get(0).getName());
+        assertEquals(CcaLevel.HIGH, ccaManager.getCCAList().get(0).getLevel());
     }
 
     @Test
     void execute_addDuplicateCca_showsError() {
-        new AddCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
-        new AddCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
+        new AddCcaCommand("Basketball", CcaLevel.MEDIUM).execute(ccaManager, residentManager, ui);
+        new AddCcaCommand("Basketball", CcaLevel.MEDIUM).execute(ccaManager, residentManager, ui);
+
         assertEquals(1, ccaManager.getCCAList().size());
-        assertEquals("CCA Basketball already exists.", ui.getLastMessage());
+        assertEquals("Error: CCA Basketball already exists.", ui.getLastMessage());
     }
 
     @Test
     void execute_addDuplicateCcaDifferentCase_showsError() {
-        new AddCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
-        new AddCcaCommand("basketball").execute(ccaManager, residentManager, ui);
+        new AddCcaCommand("Basketball", CcaLevel.LOW).execute(ccaManager, residentManager, ui);
+        new AddCcaCommand("basketball", CcaLevel.LOW).execute(ccaManager, residentManager, ui);
+
         assertEquals(1, ccaManager.getCCAList().size());
-        assertEquals("CCA basketball already exists.", ui.getLastMessage());
+        assertEquals("Error: CCA basketball already exists.", ui.getLastMessage());
+    }
+
+    @Test
+    void execute_addUnknownLevel_showsError() {
+        new AddCcaCommand("InvalidCCA", CcaLevel.UNKNOWN).execute(ccaManager, residentManager, ui);
+
+        assertEquals(0, ccaManager.getCCAList().size());
+        assertEquals("Could not add CCA: Invalid level provided.", ui.getLastMessage());
     }
 }

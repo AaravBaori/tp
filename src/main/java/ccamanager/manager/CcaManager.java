@@ -1,5 +1,6 @@
 package ccamanager.manager;
 
+import ccamanager.enumerations.CcaLevel;
 import ccamanager.exceptions.CcaNotFoundException;
 import ccamanager.model.Cca;
 import java.util.logging.Level;
@@ -19,7 +20,7 @@ public class CcaManager {
      * Creates and adds the CCA to CCAList
      * @param ccaName Name of the CCA
      */
-    public void addCCA(String ccaName) throws DuplicateCcaException {
+    public void addCCA(String ccaName, CcaLevel ccaLevel) throws DuplicateCcaException {
         logger.log(Level.INFO,"Attempting to add CCA: " + ccaName);
 
         assert !ccaName.isBlank() : "CCA name should not be blank";
@@ -32,7 +33,7 @@ public class CcaManager {
             throw new DuplicateCcaException("CCA " + ccaName + " already exists.");
         }
         int oldSize = ccaList.size();
-        ccaList.add(new Cca(ccaName));
+        ccaList.add(new Cca(ccaName, ccaLevel));
         assert ccaList.size() == oldSize + 1 : "CCA list size should increase by 1 after adding";
 
         logger.log(Level.INFO, "Successfully added CCA: {0}", ccaName);
@@ -61,7 +62,7 @@ public class CcaManager {
         assert !ccaName.isBlank() : "CCA name should not be blank";
 
         for (int i = 0; i < ccaList.size(); i++) {
-            if (ccaList.get(i).getName().equals(ccaName)) {
+            if (ccaList.get(i).getName().equalsIgnoreCase(ccaName)) {
                 int oldSize = ccaList.size();
                 ccaList.remove(i);
                 assert ccaList.size() == oldSize - 1 : "CCA list size should decrease by 1 after deletion";

@@ -7,6 +7,8 @@ import ccamanager.exceptions.ResidentAlreadyInCcaException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ccamanager.enumerations.CcaLevel;
+
 /**
  * Represents a Co-Curricular Activity (CCA).
  * Plain data model — fields only, no business logic.
@@ -19,14 +21,18 @@ public class Cca {
      * The display name of this CCA.
      */
     private String name;
+    private CcaLevel level;
     private ArrayList<Resident> registeredResidents = new ArrayList<Resident>();
 
 
     /**
      * @param name the name of the CCA, e.g. "Basketball"
+     * @param level the level of the CCA, e.g. "HIGH"
      */
-    public Cca(String name) {
+    public Cca(String name, CcaLevel level) {
+
         this.name = name;
+        this.level = level;
     }
 
     /**
@@ -42,6 +48,21 @@ public class Cca {
     public void setName(String name) {
         assert name != null : "CCA name should not be null";
         this.name = name;
+    }
+
+    /**
+     * @return the CCA level
+     */
+    public CcaLevel getLevel() {
+        return level;
+    }
+
+    /**
+     *@param level the level of the CCA
+     */
+    public void setLevel(CcaLevel level){
+        assert level != null : "CCA level should not be null";
+        this.level = level;
     }
 
     /**
@@ -71,6 +92,6 @@ public class Cca {
      */
     @Override
     public String toString() {
-        return name;
+        return this.name + "(" + this.level + ")";
     }
 }
