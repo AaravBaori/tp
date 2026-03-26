@@ -37,7 +37,7 @@ public class AddResidentToCcaCommandTest {
         new AddResidentCommand("John", "A1234567B").execute(ccaManager, residentManager, ui);
         new AddResidentToCcaCommand("A1234567B", "Basketball", "10")
                 .execute(ccaManager, residentManager, ui);
-        assertEquals("Error: Basketball not found.", ui.getLastMessage());
+        assertEquals("Basketball not found.", ui.getLastMessage());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class AddResidentToCcaCommandTest {
         new AddCcaCommand("Basketball", CcaLevel.MEDIUM).execute(ccaManager, residentManager, ui);
         new AddResidentToCcaCommand("A1234567B", "Basketball", "10")
                 .execute(ccaManager, residentManager, ui);
-        assertEquals("Error: Resident with matric number A1234567B not found.", ui.getLastMessage());
+        assertEquals("A1234567B not found.", ui.getLastMessage());
     }
 
     @Test
@@ -56,6 +56,6 @@ public class AddResidentToCcaCommandTest {
                 .execute(ccaManager, residentManager, ui);
         new AddResidentToCcaCommand("A1234567B", "Basketball", "10")
                 .execute(ccaManager, residentManager, ui);
-        assertEquals("Error: Resident John is already a member of Basketball.", ui.getLastMessage());
+        assertEquals("Resident John is already a member of Basketball.", ui.getLastMessage());
     }
 }

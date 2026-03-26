@@ -37,7 +37,7 @@ public class AddCcaCommandTest {
         new AddCcaCommand("Basketball", CcaLevel.MEDIUM).execute(ccaManager, residentManager, ui);
 
         assertEquals(1, ccaManager.getCCAList().size());
-        assertEquals("Error: CCA Basketball already exists.", ui.getLastMessage());
+        assertEquals("CCA Basketball already exists.", ui.getLastMessage());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class AddCcaCommandTest {
         new AddCcaCommand("basketball", CcaLevel.LOW).execute(ccaManager, residentManager, ui);
 
         assertEquals(1, ccaManager.getCCAList().size());
-        assertEquals("Error: CCA basketball already exists.", ui.getLastMessage());
+        assertEquals("CCA basketball already exists.", ui.getLastMessage());
     }
 
     @Test

@@ -32,6 +32,10 @@ public class AddCcaCommand extends Command {
 
     @Override
     public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+        if(ccaLevel == CcaLevel.UNKNOWN){
+            ui.showError("Could not add CCA: Invalid level provided.");
+            return;
+        }
         try {
             ccaManager.addCCA(ccaName, ccaLevel);
             ui.showMessage("CCA added: " + ccaName + "(" + ccaLevel + ")");

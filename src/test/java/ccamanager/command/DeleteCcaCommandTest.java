@@ -33,7 +33,7 @@ public class DeleteCcaCommandTest {
     @Test
     void execute_deleteCca_invalidName() {
         new DeleteCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
-        assertEquals("Error: The CCA Basketball does not exist, please enter a valid CCA name.",
+        assertEquals("The CCA Basketball does not exist, please enter a valid CCA name.",
                 ui.getLastMessage());
     }
 
@@ -41,7 +41,7 @@ public class DeleteCcaCommandTest {
     void execute_deleteCca_emptyList() {
         new DeleteCcaCommand("Basketball").execute(ccaManager, residentManager, ui);
         assertEquals(0, ccaManager.getCCAList().size());
-        assertEquals("Error: The CCA Basketball does not exist, please enter a valid CCA name.",
+        assertEquals("The CCA Basketball does not exist, please enter a valid CCA name.",
                 ui.getLastMessage());
     }
 }

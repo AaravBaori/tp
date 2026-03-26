@@ -32,6 +32,8 @@ public class CcaManager {
             logger.log(Level.WARNING,"Failed to add CCA (duplicate) :" + ccaName);
             throw new DuplicateCcaException("CCA " + ccaName + " already exists.");
         }
+
+
         int oldSize = ccaList.size();
         ccaList.add(new Cca(ccaName, ccaLevel));
         assert ccaList.size() == oldSize + 1 : "CCA list size should increase by 1 after adding";

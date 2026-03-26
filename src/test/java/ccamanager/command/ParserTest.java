@@ -18,7 +18,7 @@ public class ParserTest {
 
     @Test
     void parse_addCca_success() {
-        assertInstanceOf(AddCcaCommand.class, parser.parse("add-cca Basketball"));
+        assertInstanceOf(AddCcaCommand.class, parser.parse("add-cca Basketball HIGH"));
     }
 
     @Test

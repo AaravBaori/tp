@@ -45,7 +45,7 @@ public class AddResidentToCcaCommand extends Command {
             cca.addResidentToCca(resident);
             resident.addCcaToResident(cca, pointsScored);
 
-            ui.showMessage("Resident " + resident + " was added to CCA: " + cca + " with " + pointsScored + " points.");
+            ui.showMessage("Resident " + resident + " was added to CCA: " + cca.getName() + " with " + pointsScored + " points.");
 
         } catch (CcaNotFoundException | ResidentNotFoundException | ResidentAlreadyInCcaException e) {
             ui.showError(e.getMessage());
