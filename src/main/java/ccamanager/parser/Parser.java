@@ -11,7 +11,6 @@ import ccamanager.command.ViewCcaCommand;
 import ccamanager.command.ViewResidentCommand;
 import ccamanager.command.ViewPointsCommand;
 import ccamanager.enumerations.CcaLevel;
-import ccamanager.model.Cca;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
