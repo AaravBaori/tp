@@ -101,12 +101,16 @@ public class Parser {
         }
     }
 
-    static CcaLevel getCcaLevel(String ccaLevel){
-        try {
-            return CcaLevel.valueOf(ccaLevel.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            // Handle case where user typed "super-high" or something invalid
-            logger.log(Level.WARNING, "Invalid CCA level entered: " + ccaLevel);
+    /**
+     * Extracts out the name of the CCA from the command given
+     * @param input input text given by the user
+     * @return CCA name as a string
+     */
+    String getCcaName(String input) {
+        assert input != null && !input.isBlank() : "Input to getCcaName should not be null or blank";
+        String[] parts = input.split(" ", 2);
+        if (parts.length < 2) {
+            return "";
         }
         return CcaLevel.UNKNOWN;
     }
