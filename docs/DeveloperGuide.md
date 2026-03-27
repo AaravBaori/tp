@@ -82,13 +82,37 @@ public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui u
     ArrayList<Cca> ccaList = ccaManager.getCCAList();
     ui.showCcaList(ccaList);
 }
-
 ```
 
 ### Sequence Diagram 
 ![Add CCA Sequence Diagram](images/view-cca.png)
 
+## View Resident Command
 
+### Overview
+
+The `view-resident` command displays the list of all residents stored in the system.
+
+Format:
+`view-resident`
+
+---
+
+### Implementation
+
+The `view-resident` command retrieves and displays all residents.
+
+- The `Parser` creates a `ViewResidentCommand` object.
+- `ViewResidentCommand.execute()` calls `ResidentManager.getResidentList()`.
+- The retrieved list is passed to `Ui.showResidentList(...)` for display.
+
+```java
+@Override
+ public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+     ArrayList<Resident> residentList = residentManager.getResidentList();
+     ui.showResidentList(residentList);
+ }
+```
 
 ## Product scope
 ### Target user profile
