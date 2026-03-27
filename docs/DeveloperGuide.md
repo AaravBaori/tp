@@ -114,6 +114,49 @@ The `view-resident` command retrieves and displays all residents.
  }
 ```
 
+## Delete CCA Command
+
+### Overview
+
+The `delete-cca` command removes an existing CCA from the system.
+
+Format:
+`delete-cca <cca name>`
+
+---
+
+### Implementation
+
+The `delete-cca` command is implemented using the Command pattern.
+
+- The `Parser` creates a `DeleteCcaCommand` object from user input.
+- `DeleteCcaCommand.execute()` calls `CcaManager.deleteCca(...)`.
+- If the CCA does not exist, a `CcaNotFoundException` is thrown and handled.
+```java
+@Override
+public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+    try {
+        ccaManager.deleteCca(ccaName);
+        ui.showMessage("CCA deleted: " + ccaName);
+    } catch (CcaNotFoundException e) {
+        ui.showMessage(e.getMessage());
+    }
+}
+```
+
+### Design Considerations
+
+- Command pattern is used to separate parsing and execution.
+- Exception handling is used to manage non-existent CCA cases cleanly.
+
+### Alternatives Considered
+1. Direct Invocation from Parser to Manager  
+   Approach: Parser directly calls `CcaManager.deleteCca(...)`  
+   Rejected because:
+    - Violates separation of concerns
+    - Makes Parser overly complex
+    - Reduces extensibility
+
 ## Product scope
 ### Target user profile
 
