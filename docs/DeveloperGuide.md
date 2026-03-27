@@ -114,6 +114,40 @@ The `view-resident` command retrieves and displays all residents.
  }
 ```
 
+
+
+## View Points Command
+
+### Overview
+
+The view-points command displays the CCA points for all residents in the system.
+
+Format:
+view-points
+
+---
+
+### Implementation
+
+The view-points command retrieves and displays CCA points for all residents.
+
+- The Parser creates a ViewPointsCommand object.
+- ViewPointsCommand.execute() calls ResidentManager.getResidentList().
+- The retrieved list is passed to Ui.showCcaPoints(...) for display.
+```java
+@Override
+public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+ArrayList<Resident> residentList = residentManager.getResidentList();
+ui.showCcaPoints(residentList);
+}
+```
+
+### Design Considerations
+
+- Command pattern is used to separate parsing and execution.
+- Reuses ResidentManager.getResidentList() to retrieve resident data, keeping the manager layer lean.
+
+
 ## Delete CCA Command
 
 ### Overview
