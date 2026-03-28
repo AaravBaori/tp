@@ -4,6 +4,7 @@ import ccamanager.command.AddCcaCommand;
 import ccamanager.command.AddEventCommand;
 import ccamanager.command.AddResidentCommand;
 import ccamanager.command.AddResidentToCcaCommand;
+import ccamanager.command.AddResidentToEventCommand;
 import ccamanager.command.ExitCommand;
 import ccamanager.command.Command;
 import ccamanager.command.UnknownCommand;
@@ -85,6 +86,24 @@ public class Parser {
                 return new UnknownCommand("Matric number cannot be empty.");
             }
             return new AddResidentCommand(parts[1], parts[2]);
+
+        case "add-resident-to-event":
+            if (parts.length < 4) {
+                return new UnknownCommand("Usage: add-resident-to-event <matric number> <event name> <cca name>");
+            }
+
+            if (parts[1].isBlank()) {
+                return new UnknownCommand("Student number cannot be empty");
+            }
+
+            if (parts[2].isBlank()) {
+                return new UnknownCommand("Event name cannot be empty");
+            }
+
+            if (parts[3].isBlank()) {
+                return new UnknownCommand("CCA Name cannot be empty.");
+            }
+            return new AddResidentToEventCommand(parts[1], parts[2], parts[3]);
 
         case "add-resident-to-cca":
             if (parts.length < 4) {
