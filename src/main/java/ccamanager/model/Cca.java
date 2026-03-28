@@ -66,6 +66,14 @@ public class Cca {
     }
 
     /**
+     * Returns the registered residents
+     * @return a list of residents enrolled in the CCA
+     */
+    public ArrayList<Resident> getRegisteredResidents() {
+        return registeredResidents;
+    }
+
+    /**
      * Add resident to a CCA
      * @param resident the resident to be added
      */
@@ -92,7 +100,7 @@ public class Cca {
      */
     @Override
     public String toString() {
-        return this.name + "(" + this.level + ")";
+        return this.name + "(" + this.level + "): " + this.registeredResidents.size() + " residents";
     }
 }
 
