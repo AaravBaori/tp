@@ -2,6 +2,7 @@ package ccamanager;
 
 import ccamanager.command.Command;
 import ccamanager.manager.CcaManager;
+import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.parser.Parser;
 import ccamanager.ui.Ui;
@@ -20,12 +21,14 @@ public class CcaLedger {
 
     private final CcaManager ccaManager;
     private final ResidentManager residentManager;
+    private final EventManager eventManager;
     private final Ui ui;
     private final Parser parser;
 
     public CcaLedger() {
         this.ccaManager = new CcaManager();
         this.residentManager = new ResidentManager();
+        this.eventManager = new EventManager();
         this.ui = new Ui();
         this.parser = new Parser();
     }
@@ -41,7 +44,7 @@ public class CcaLedger {
         while (isRunning) {
             String input = ui.readInput();
             Command command = parser.parse(input);
-            command.execute(ccaManager, residentManager, ui);
+            command.execute(ccaManager, residentManager, eventManager, ui);
             isRunning = !command.isExit();
         }
 

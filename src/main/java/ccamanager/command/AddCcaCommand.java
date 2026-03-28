@@ -3,6 +3,7 @@ package ccamanager.command;
 import ccamanager.enumerations.CcaLevel;
 import ccamanager.exceptions.InvalidCcaLevelException;
 import ccamanager.manager.CcaManager;
+import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.ui.Ui;
 
@@ -31,7 +32,7 @@ public class AddCcaCommand extends Command {
     }
 
     @Override
-    public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+    public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         try {
             ccaManager.addCCA(ccaName, ccaLevel);
             ui.showMessage("CCA added: " + ccaName + "(" + ccaLevel + ")");
@@ -40,3 +41,4 @@ public class AddCcaCommand extends Command {
         }
     }
 }
+

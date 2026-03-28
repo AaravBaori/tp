@@ -1,6 +1,7 @@
 package ccamanager.command;
 
 import ccamanager.manager.CcaManager;
+import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 
 import ccamanager.model.Cca;
@@ -30,7 +31,7 @@ public class AddResidentToCcaCommand extends Command {
     }
 
     @Override
-    public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+    public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         try {
             Cca cca = ccaManager.getCCAList().stream()
                     .filter(x -> x.getName().equals(ccaName))
@@ -53,5 +54,6 @@ public class AddResidentToCcaCommand extends Command {
         }
     }
 }
+
 
 

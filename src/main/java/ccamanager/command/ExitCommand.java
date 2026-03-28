@@ -1,6 +1,7 @@
 package ccamanager.command;
 
 import ccamanager.manager.CcaManager;
+import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.ui.Ui;
 
@@ -10,7 +11,7 @@ import ccamanager.ui.Ui;
  */
 public class ExitCommand extends Command {
     @Override
-    public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+    public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         // Nothing to do — CcaLedger will call ui.showGoodbye() after checking isExit()
     }
 
@@ -19,3 +20,4 @@ public class ExitCommand extends Command {
         return true;
     }
 }
+

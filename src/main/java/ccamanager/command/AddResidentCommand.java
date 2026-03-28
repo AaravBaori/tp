@@ -1,6 +1,7 @@
 package ccamanager.command;
 
 import ccamanager.manager.CcaManager;
+import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.ui.Ui;
 
@@ -20,7 +21,7 @@ public class AddResidentCommand extends Command{
         this.matricNumber=matricNumber;
     }
 
-    public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+    public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         try {
             residentManager.addResident(residentName, matricNumber);
             ui.showMessage("Resident added: " + residentName + " " + matricNumber);
@@ -31,3 +32,4 @@ public class AddResidentCommand extends Command{
 
 
 }
+

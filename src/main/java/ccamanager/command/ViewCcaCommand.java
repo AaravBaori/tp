@@ -2,6 +2,7 @@ package ccamanager.command;
 
 import java.util.ArrayList;
 import ccamanager.manager.CcaManager;
+import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.model.Cca;
 import ccamanager.ui.Ui;
@@ -16,8 +17,9 @@ public class ViewCcaCommand extends Command {
     }
 
     @Override
-    public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+    public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         ArrayList<Cca> ccaList = ccaManager.getCCAList();
         ui.showCcaList(ccaList);
     }
 }
+

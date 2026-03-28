@@ -1,6 +1,7 @@
 package ccamanager.command;
 
 import ccamanager.manager.CcaManager;
+import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.model.Resident;
 import ccamanager.ui.Ui;
@@ -20,8 +21,9 @@ public class ViewResidentCommand extends Command {
      * @param ui              used to display output — ONLY class that should print
      */
     @Override
-    public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+    public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         ArrayList<Resident> residentList = residentManager.getResidentList();
         ui.showResidentList(residentList);
     }
 }
+

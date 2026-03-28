@@ -1,6 +1,7 @@
 package ccamanager.command;
 
 import ccamanager.manager.CcaManager;
+import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.ui.Ui;
 
@@ -15,7 +16,8 @@ public abstract class Command {
      * @param residentManager manages the list of Residents
      * @param ui              used to display output — ONLY class that should print
      */
-    public abstract void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui);
+    public abstract void execute(CcaManager ccaManager, ResidentManager residentManager,
+                                 EventManager eventManager, Ui ui);
 
     /**
      * Returns true if this command should end the application loop.
@@ -27,3 +29,4 @@ public abstract class Command {
         return false;
     }
 }
+

@@ -2,6 +2,7 @@ package ccamanager.command;
 
 import ccamanager.exceptions.CcaNotFoundException;
 import ccamanager.manager.CcaManager;
+import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.ui.Ui;
 
@@ -17,7 +18,7 @@ public class DeleteCcaCommand extends Command{
     }
 
     @Override
-    public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
+    public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         try {
             ccaManager.deleteCca(ccaName);
             ui.showMessage("CCA deleted: " + ccaName);
@@ -26,3 +27,4 @@ public class DeleteCcaCommand extends Command{
         }
     }
 }
+

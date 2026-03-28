@@ -1,10 +1,13 @@
 package ccamanager.model;
 
+import java.util.ArrayList;
+
 public class Event {
 
     private final String eventName;
     private final Cca cca;
     private final String eventDate;
+    private ArrayList<Resident> participants;
 
     public Event(String eventName, Cca cca, String eventDate) {
         assert eventName != null && !eventName.isBlank() : "Event name should not be null or blank";
@@ -14,6 +17,11 @@ public class Event {
         this.eventName = eventName;
         this.cca = cca;
         this.eventDate = eventDate;
+        participants = new ArrayList<Resident>();
+    }
+
+    public void addResident(Resident resident) {
+        participants.add(resident);
     }
 
     public String getEventName() {

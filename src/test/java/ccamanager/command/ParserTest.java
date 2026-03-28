@@ -101,3 +101,4 @@ public class ParserTest {
         assertInstanceOf(UnknownCommand.class, parser.parse(null));
     }
 }
+

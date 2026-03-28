@@ -3,6 +3,7 @@ package ccamanager.command;
 import ccamanager.enumerations.CcaLevel;
 import ccamanager.manager.CcaManager;
 import ccamanager.manager.ResidentManager;
+import ccamanager.manager.EventManager;
 import ccamanager.model.Cca;
 import ccamanager.ui.Ui;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,12 +18,14 @@ public class ViewCcaCommandTest {
 
     private CcaManager ccaManager;
     private ResidentManager residentManager;
+    private EventManager eventManager;
     private StubUi stubUi;
 
     @BeforeEach
     public void setUp() {
         ccaManager = new CcaManager();
         residentManager = new ResidentManager();
+        eventManager = new EventManager();
         stubUi = new StubUi();
     }
 
@@ -30,7 +33,7 @@ public class ViewCcaCommandTest {
     public void execute_emptyCcaList_showsEmptyList() {
         ViewCcaCommand command = new ViewCcaCommand();
 
-        command.execute(ccaManager, residentManager, stubUi);
+        command.execute(ccaManager, residentManager, eventManager, stubUi);
 
         assertTrue(stubUi.wasShowCcaListCalled);
         assertEquals(0, stubUi.capturedList.size());
@@ -43,7 +46,7 @@ public class ViewCcaCommandTest {
 
         ViewCcaCommand command = new ViewCcaCommand();
 
-        command.execute(ccaManager, residentManager, stubUi);
+        command.execute(ccaManager, residentManager, eventManager, stubUi);
 
         assertTrue(stubUi.wasShowCcaListCalled);
         assertEquals(2, stubUi.capturedList.size());
