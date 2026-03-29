@@ -37,7 +37,7 @@ public class Ui {
     public void showWelcome() {
         System.out.println(DIVIDER);
         System.out.println(" Welcome to CCA Ledger!");
-        System.out.println(" Type a command to get started. Type 'bye' to exit.");
+        System.out.println(" Type 'help' for available commands. Type 'bye' to exit.");
         System.out.println(DIVIDER);
     }
 
