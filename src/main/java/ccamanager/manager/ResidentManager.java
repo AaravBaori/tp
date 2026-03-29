@@ -43,4 +43,17 @@ public class ResidentManager {
     public ArrayList<Resident> getResidentList() {
         return residents;
     }
+
+    /**
+     * Return the resident that have the matching matric number
+     * @param matricNumber matric number of that resident
+     * @return Resident
+     */
+    public Resident matchingResident(String matricNumber){
+        for(Resident resident : residents){
+            if(resident.getMatricNumber().equalsIgnoreCase(matricNumber))
+                return resident;
+        }
+        return null;
+    }
 }

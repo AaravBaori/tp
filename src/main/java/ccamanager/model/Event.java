@@ -36,6 +36,8 @@ public class Event {
         return cca;
     }
 
+    public ArrayList<Resident> getParticipants(){return participants;}
+
     @Override
     public String toString() {
         return "Event :" + eventName + " of the Cca " + cca + ". Held on " + eventDate + ".";

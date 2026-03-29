@@ -1,6 +1,7 @@
 package ccamanager.ui;
 
 import ccamanager.model.Cca;
+import ccamanager.model.Event;
 import ccamanager.model.Resident;
 
 import java.util.ArrayList;
@@ -170,6 +171,32 @@ public class Ui {
         for (Resident resident : mostActiveResident) {
             System.out.println(index + ". " + resident + ", total points: " + totalPoints.get(resident));
             index++;
+        }
+        System.out.println(DIVIDER);
+    }
+    /**
+     * Displays the matching events
+     * @param events an arraylist of events that matches the requirement
+     */
+    public void viewMatchingCcas(ArrayList<Event> events){
+        System.out.println(DIVIDER);
+        System.out.println("Here are your events:");
+        for(int i=0; i<events.size();i++){
+            System.out.println((i+1)+"." +" " +events.get(i).getEventName()+ " date: " + events.get(i).getEventDate());
+        }
+        System.out.println(DIVIDER);
+    }
+    /**
+     * Displays the matching events
+     * @param events an arraylist of events that matches the requirement
+     */
+    public void viewMyCcas(ArrayList<Event> events){
+        System.out.println(DIVIDER);
+
+        for(int i=0; i<events.size();i++){
+            String ccaName = events.get(i).getCca().getName();
+            String eventName=events.get(i).getEventName();
+            System.out.println((i+1)+". "+ ccaName +": "+eventName+ " date: " + events.get(i).getEventDate());
         }
         System.out.println(DIVIDER);
     }

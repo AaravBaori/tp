@@ -62,5 +62,33 @@ public class EventManager {
     public ArrayList<Event> getEventList() {
         return events;
     }
+
+    public ArrayList<Event> viewMyEvents(String marticNumber){
+        ArrayList<Event> matchingEvents = new ArrayList<>();
+        for(Event event: events){
+            ArrayList<Resident> participants = event.getParticipants();
+            for(Resident resident:participants){
+                if(resident.getMatricNumber().equalsIgnoreCase(marticNumber)){
+                    matchingEvents.add(event);
+                    break;
+                }
+            }
+        }
+
+        return matchingEvents;
+    }
+
+    public ArrayList<Event> viewCcaEvents(String ccaName){
+        ArrayList<Event> matchingEvents = new ArrayList<>();
+        for(int i =0;i< events.size();i++){
+            Cca cca = events.get(i).getCca();
+            if(cca.getName().equalsIgnoreCase(ccaName)){
+                matchingEvents.add(events.get(i));
+            }
+        }
+        return matchingEvents;
+    }
+
+
 }
 
