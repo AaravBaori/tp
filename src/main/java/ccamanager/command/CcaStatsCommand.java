@@ -37,12 +37,16 @@ public class CcaStatsCommand extends Command {
         HashMap<Cca, Double> avgPoints = new HashMap<>();
         for (Cca cca : ccas) {
             ArrayList<Resident> registeredResidents = cca.getRegisteredResidents();
-            double totalPoints = 0;
-            for (Resident resident : registeredResidents) {
-                totalPoints += resident.getCcaMap().get(cca);
+            if (registeredResidents.isEmpty()) {
+                avgPoints.put(cca, 0.0);
+            } else {
+                double totalPoints = 0;
+                for (Resident resident : registeredResidents) {
+                    totalPoints += resident.getCcaMap().get(cca);
+                }
+                double avg = totalPoints / registeredResidents.size();
+                avgPoints.put(cca, avg);
             }
-            double avg = totalPoints / registeredResidents.size();
-            avgPoints.put(cca, avg);
         }
         return avgPoints;
     }
