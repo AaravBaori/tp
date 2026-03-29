@@ -1,6 +1,6 @@
 package ccamanager.manager;
 
-import ccamanager.exceptions.CcaNotFoundException;
+
 import ccamanager.exceptions.ResidentNotFoundException;
 import ccamanager.model.Resident;
 
@@ -90,6 +90,6 @@ public class ResidentManager {
             }
         }
         logger.log(Level.WARNING, "Failed to delete resident: {0}. (Not an exisitng resident).", residentName);
-        throw new ResidentNotFoundException("The resident " + residentName + " does not exist, please enter a valid CCA name.");
+        throw new ResidentNotFoundException(residentName + " does not exist, please enter a valid CCA name.");
     }
 }
