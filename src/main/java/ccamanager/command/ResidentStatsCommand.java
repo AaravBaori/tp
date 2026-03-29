@@ -19,6 +19,7 @@ public class ResidentStatsCommand extends Command {
             return;
         }
         HashMap<Resident, Integer> totalPoints = totalPoints(residents);
+        ArrayList<Resident> mostActiveResident = mostActiveResidents(totalPoints);
     }
 
     private static HashMap<Resident, Integer> totalPoints(ArrayList<Resident> residents) {
@@ -33,5 +34,21 @@ public class ResidentStatsCommand extends Command {
             }
         }
         return totalPoints;
+    }
+
+    private static ArrayList<Resident> mostActiveResidents (HashMap<Resident, Integer> totalPoints) {
+        ArrayList<Resident> mostActiveResidents = new ArrayList<>();
+        int max = 0;
+        for (Resident resident : totalPoints.keySet()) {
+            if (totalPoints.get(resident) > max) {
+                max = totalPoints.get(resident);
+            }
+        }
+        for (Resident resident : totalPoints.keySet()) {
+            if (totalPoints.get(resident) == max) {
+                mostActiveResidents.add(resident);
+            }
+        }
+        return mostActiveResidents;
     }
 }
