@@ -276,6 +276,8 @@ private static HashMap<Cca, Resident> mostActiveResidents(ArrayList<Cca> ccas) t
    return mostActiveResidents;
 }
 ```
+### Sequence Diagram
+![Add CCA Statistics Sequence Diagram](images/cca-stats.png)
 
 ## Product scope
 ### Target user profile
