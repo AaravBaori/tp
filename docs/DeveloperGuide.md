@@ -116,6 +116,85 @@ The `view-resident` command retrieves and displays all residents.
 ### Sequence Diagram
 ![Add View Resident Sequence Diagram](images/view-resident.png)
 
+## Add Resident Command
+
+### Overview
+
+The `add-resident` command adds a new resident to the system.
+
+Format:  
+`add-resident <resident name> <matric number>`
+
+---
+
+### Implementation
+
+The `add-resident` command is implemented using the Command pattern.
+
+- The `Parser` creates an `AddResidentCommand` object from user input.
+- `AddResidentCommand.execute()` calls `ResidentManager.addResident(...)`.
+- If a resident with the same matric number already exists, a `DuplicateResidentException` is thrown and handled.
+
+```java
+@Override
+public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
+   try {
+      residentManager.addResident(residentName, matricNumber);
+      ui.showMessage("Resident added: " + residentName + " " + matricNumber);
+   } catch (DuplicateResidentException e) {
+      ui.showError(e.getMessage());
+   }
+}
+```
+### Sequence Diagram
+
+![add-resident.png](images/add-resident.png)
+
+### Design Considerations
+- Command pattern separates parsing and execution.
+- Duplicate validation is handled inside ResidentManager, keeping business logic centralized.
+
+
+### Delete Resident Command
+### Overview
+
+The `delete-resident` command removes an existing resident from the system.
+
+Format:
+`delete-resident <matric number>`
+
+---
+### Implementation
+
+The `delete-resident` command is implemented using the Command pattern.
+
+The `Parser` creates a `DeleteResidentCommand`.
+`DeleteResidentCommand.execute()` retrieves the resident name using `ResidentManager.nameGivenMatricNumber(...).`
+It then calls `ResidentManager.deleteResident(...)`.
+If the resident does not exist, a ResidentNotFoundException is thrown and handled.
+
+@Override
+```java
+public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
+try {
+String residentName = residentManager.nameGivenMatricNumber(matricNumber);
+residentManager.deleteResident(matricNumber);
+ui.showMessage("Resident deleted: " + residentName);
+} catch (ResidentNotFoundException e) {
+ui.showMessage(e.getMessage());
+}
+}
+```
+### Sequence Diagram
+
+![delete-resident.png](images/delete-resident.png)
+
+### Design Considerations
+- Delegates deletion logic fully to ResidentManager.
+- Retrieves resident name before deletion for better user feedback.
+
+
+
 ## View Points Command
 
 ### Overview
@@ -141,11 +220,15 @@ ArrayList<Resident> residentList = residentManager.getResidentList();
 ui.showCcaPoints(residentList);
 }
 ```
+### Sequence Diagram
+
+![view-points.png](images/view-points.png)
 
 ### Design Considerations
 
 - Command pattern is used to separate parsing and execution.
 - Reuses ResidentManager.getResidentList() to retrieve resident data, keeping the manager layer lean.
+
 
 
 ## Delete CCA Command
@@ -390,6 +473,63 @@ The `help` command is implemented using the Command pattern.
     ui.showMessage(help);
 }
  ```
+
+## View My Events Command
+
+### Overview
+
+The `view-my-event` command displays all events that a resident is participating in.
+
+Format:  
+`view-my-event <matric number>`
+
+---
+
+### Implementation
+
+The `view-my-event` command retrieves and displays all events associated with a resident.
+
+The `Parser` creates a `ViewMyEvents` object from user input. `ViewMyEvents.execute()` calls `EventManager.viewMyEvents(matricNumber)` to retrieve the matching events. It then retrieves the resident using `ResidentManager.matchingResident(...)`, prints a greeting using the resident’s name, and passes the event list to `Ui.viewMyCcas(...)` for display.
+
+```java
+@Override
+public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
+    ArrayList<Event> ccaEvents = eventManager.viewMyEvents(matricNumber);
+    Resident resident = residentManager.matchingResident(matricNumber);
+    System.out.println("Hi " + resident.getName() + ", here are your events: ");
+    ui.viewMyCcas(ccaEvents);
+}
+```
+### Sequence Diagram
+![view-my-events.png](images/view-my-events.png)
+
+
+## View CCA Events Command
+
+### Overview
+
+The `view-cca-event` command displays all events under a specified CCA.
+
+Format:  
+`view-cca-event <cca name>`
+
+---
+
+### Implementation
+
+The `view-cca-event` command retrieves and displays all events belonging to a specific CCA.
+
+The `Parser` creates a `ViewCcaEvents` object from user input. `ViewCcaEvents.execute()` calls `EventManager.viewCcaEvents(ccaName)` to retrieve the matching events, and the resulting list is passed to `Ui.viewMatchingCcas(...)` for display.
+
+```java
+@Override
+public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui){
+    ArrayList<Event> ccaEvents = eventManager.viewCcaEvents(ccaName);
+    ui.viewMatchingCcas(ccaEvents);
+}
+```
+### Sequence Diagram
+![view-cca-events.png](images/view-cca-events.png)
 
 ## Product scope
 ### Target user profile

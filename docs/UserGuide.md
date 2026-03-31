@@ -92,8 +92,20 @@ ________________________________________________________________________________
 ```
 
 
+### Adding Resident: : `add-resident`
 
+Add a new resident into the system.
 
+Format: `add-resident <resident name> <matric number>`
+
+Example:
+
+```
+> add-resident yy A1234567B
+_________________________________________________________________________________
+Resident added: John A1234567B
+_________________________________________________________________________________
+```
 
 ### Viewing residents: `view-resident`
 Displays all the residents in the system.
@@ -110,6 +122,23 @@ Here is the complete list of all the residents :
 1. John | 1234
 2. James | 4321
 _________________________________________________________________________________
+```
+
+
+### Deleting Resident: `delete-resident`
+
+Delete an existing resident from the system.
+
+Format: delete-resident <matric number>
+
+Example:
+
+```
+> delete-resident A1234567B
+_________________________________________________________________________________
+Resident deleted: John
+_________________________________________________________________________________
+
 ```
 
 ### Viewing per-CCA statistics: `cca-stats`
@@ -193,6 +222,56 @@ Here is the complete list of all the EXCOs :
 1. Aarav | A0310652R
 _________________________________________________________________________________
 
+```
+
+### Viewing Points: `view-points`
+
+View the CCA points of all residents.
+
+Format: view-points
+
+Example:
+
+```
+> view-points
+_________________________________________________________________________________
+Here is the complete list of residents and their CCA points:
+1. John | A1234567B | 10 points
+2. James | A7654321C | 6 points
+_________________________________________________________________________________
+```
+
+
+### Viewing Events for a CCA: `view-cca-event`
+
+View all events belonging to a specific CCA.
+
+Format: view-cca-event <cca name>
+
+Example:
+```
+> view-cca-event Basketball
+_________________________________________________________________________________
+Here are the events under Basketball:
+1. Practice-Week1 | 29/3/26
+2. Friendly-Match | 5/4/26
+_________________________________________________________________________________
+```
+
+### Viewing My Events: `view-my-event`
+
+View all events that a resident is participating in.
+
+Format: view-my-event <matric number>
+
+Example:
+```
+> view-my-event A1234567B
+Hi John, here are your events:
+_________________________________________________________________________________
+1. Practice-Week1 | Basketball | 29/3/26
+2. Orientation | ComputingClub | 2/4/26
+_________________________________________________________________________________
 ```
 
 ### Viewing all the available commands: `help`
