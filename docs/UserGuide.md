@@ -152,6 +152,49 @@ Most active residents across all CCAs:
 _________________________________________________________________________________
 ```
 
+### Viewing EXCO members of a CCA: `view-exco`
+Displays the list of Executive Committee (EXCO) members for a specific CCA.
+
+Format: `view-exco <cca name>`
+
+Example:
+
+`> view-exco Basketball`
+
+```
+
+> view-exco Basketball
+_________________________________________________________________________________
+Here is the complete list of all the EXCOs :
+1. Aarav | A0310652R
+_________________________________________________________________________________
+
+```
+
+### Promoting/Assigning a resident to EXCO: `add-exco-to-cca`
+Assigns a resident as an Executive Committee member for a specific CCA.
+
+Format: `add-exco-to-cca <matric number> <cca name>`
+
+Example:
+
+`> add-exco-to-cca A0123456G Basketball`
+
+```
+
+_________________________________________________________________________________
+> add-exco-to-cca A0310652R Basketball
+_________________________________________________________________________________
+ Resident Aarav | A0310652R was added as an EXCO to CCA: Basketball
+_________________________________________________________________________________
+> view-exco Basketball
+_________________________________________________________________________________
+Here is the complete list of all the EXCOs :
+1. Aarav | A0310652R
+_________________________________________________________________________________
+
+```
+
 ### Viewing all the available commands: `help`
 Displays a list of all available commands and their usage.
 
@@ -170,8 +213,10 @@ ________________________________________________________________________________
 > add-event <event name> <cca name> <data time>
 > add-resident <name> <matric number>
 > view-resident
+> view-exco <cca name>
 > add-resident-to-cca <matric number> <cca name> <points>
 > add-resident-to-event <matric number> <event name> <cca name>
+> add-exco-to-cca <matric number> <cca name>
 > view-points
 > cca-stats
 > resident-stats

@@ -16,7 +16,7 @@
 The `add-cca` command adds a new CCA to the system.
 
 Format:
-`add-cca <cca name>`
+`add-cca <cca name> <level>`
 
 ---
 
@@ -30,13 +30,13 @@ The `add-cca` command is implemented using the Command pattern.
 
 ```java
 @Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
-    try {
-        ccaManager.addCCA(ccaName);
-        ui.showMessage("CCA added: " + ccaName);
-    } catch (DuplicateCcaException e) {
-        ui.showError(e.getMessage());
-    }
+public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
+   try {
+      ccaManager.addCCA(ccaName, ccaLevel);
+      ui.showMessage("CCA added: " + ccaName + "(" + ccaLevel + ")");
+   } catch (DuplicateCcaException | InvalidCcaLevelException e) {
+      ui.showError(e.getMessage());
+   }
 }
 ```
 ### Sequeunce Diagram

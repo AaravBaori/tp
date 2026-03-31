@@ -1,26 +1,25 @@
 package ccamanager.parser;
 
 import ccamanager.command.AddCcaCommand;
+import ccamanager.command.AddEventCommand;
+import ccamanager.command.AddExcoToCcaCommand;
 import ccamanager.command.AddResidentCommand;
 import ccamanager.command.AddResidentToCcaCommand;
-import ccamanager.command.ExitCommand;
-import ccamanager.command.DeleteCcaCommand;
-import ccamanager.command.ViewCcaCommand;
-import ccamanager.command.ViewResidentCommand;
-import ccamanager.command.ViewMyEvents;
-import ccamanager.command.DeleteResidentCommand;
-import ccamanager.command.Command;
-import ccamanager.command.UnknownCommand;
-import ccamanager.command.AddEventCommand;
 import ccamanager.command.AddResidentToEventCommand;
-import ccamanager.command.ViewCcaEvents;
-import ccamanager.command.HelpCommand;
-import ccamanager.command.ViewPointsCommand;
 import ccamanager.command.CcaStatsCommand;
+import ccamanager.command.Command;
+import ccamanager.command.DeleteCcaCommand;
+import ccamanager.command.DeleteResidentCommand;
+import ccamanager.command.ExitCommand;
+import ccamanager.command.HelpCommand;
 import ccamanager.command.ResidentStatsCommand;
-
-
-
+import ccamanager.command.UnknownCommand;
+import ccamanager.command.ViewCcaCommand;
+import ccamanager.command.ViewCcaEvents;
+import ccamanager.command.ViewCcaExco;
+import ccamanager.command.ViewMyEvents;
+import ccamanager.command.ViewPointsCommand;
+import ccamanager.command.ViewResidentCommand;
 import ccamanager.enumerations.CcaLevel;
 
 import java.util.logging.Level;
@@ -65,7 +64,11 @@ public class Parser {
 
         case "view-cca":
             return new ViewCcaCommand();
-
+        case "view-exco":
+            if (parts.length < 2 || parts[1].isBlank()){
+                return new UnknownCommand("Usage: view-cca <cca-name>");
+            }
+            return new ViewCcaExco(parts[1]);
         case "delete-cca":
             if (parts.length < 2 || parts[1].isBlank()) {
                 return new UnknownCommand("Usage: delete-cca <cca name>");
@@ -132,6 +135,17 @@ public class Parser {
                 return new UnknownCommand("Points cannot be empty.");
             }
             return new AddResidentToCcaCommand(parts[1], parts[2], parts[3]);
+        case "add-exco-to-cca":
+            if (parts.length < 3) {
+                return new UnknownCommand("Usage: add-exco-to-cca <matric number> <cca name>");
+            }
+            if (parts[1].isBlank()) {
+                return new UnknownCommand("Matric number cannot be empty.");
+            }
+            if (parts[2].isBlank()) {
+                return new UnknownCommand("CCA name cannot be empty.");
+            }
+            return new AddExcoToCcaCommand(parts[1], parts[2]);
         case "view-points":
             return new ViewPointsCommand();
         case "cca-stats":

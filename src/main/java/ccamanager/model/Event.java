@@ -36,7 +36,9 @@ public class Event {
         return cca;
     }
 
-    public ArrayList<Resident> getParticipants() { return participants; }
+    public ArrayList<Resident> getParticipants() {
+        return participants;
+    }
 
     @Override
     public String toString() {
