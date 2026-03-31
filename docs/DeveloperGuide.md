@@ -6,6 +6,39 @@
 
 ## Design & implementation
 
+### Overall Architecture
+
+CcaLedger follows a **layered, command-driven architecture** modelled after the se-edu AddressBook Level-2 design. Each layer has a single responsibility and communicates only with its immediate neighbours.
+
+![highLevel-architecture.png](images/highLevel-architecture.png)
+
+The diagram above shows the six layers and their relationships. The table below summarises each layer's role.
+
+| Layer | Key Classes | Responsibility |
+|-------|-------------|----------------|
+| Entry Point | `Main` | Instantiates `CcaLedger` and calls `run()`. |
+| Orchestration | `CcaLedger` | Owns the main loop; coordinates all components. |
+| UI & Parsing | `Ui`, `Parser` | Handles console I/O; translates input into `Command` objects. |
+| Command | `Command` and subclasses | Encapsulates a single user-facing operation. |
+| Managers | `CcaManager`, `ResidentManager`, `EventManager` | Holds and mutates application state. |
+| Domain Model | `Cca`, `Resident`, `Event`, `CcaLevel` | Plain data objects with no business logic. |
+
+**How a command executes (happy path):**
+
+1. `Ui.readInput()` reads a line from the user.
+2. `Parser.parse(input)` inspects the string and returns the appropriate `Command` subclass.
+3. `CcaLedger` calls `command.execute(ccaManager, residentManager, eventManager, ui)`.
+4. The command calls the relevant manager method(s) and prints feedback via `Ui`.
+5. If `command.isExit()` returns `true`, the loop terminates.
+
+**Key design rules:**
+- Domain objects (`Cca`, `Resident`, `Event`) have no outward dependencies.
+- Managers never reference `Ui`, `Parser`, or `Command`.
+- Commands receive all dependencies as method parameters in `execute()` — they store nothing.
+- `Command` subclasses are only ever instantiated inside `Parser.parse()`.
+
+---
+
 # CCA Manager
 
 
@@ -283,7 +316,139 @@ public void execute(CcaManager ccaManager, ResidentManager residentManager, Even
 
 ### Sequence Diagram
 
+![add-resident-to-event.png](images/add-resident-to-event.png)
+
+## Add Resident to Cca Command
+
+### Overview
+
+The `add-resident-to-cca` command adds an existing resident to a CCA.
+
+Format:
+`add-resident-to-cca <matric number> <cca name> <points>`
+
+---
+
+### Implementation
+
+- The `Parser` creates a `AddResdientToCcaCommmand` object.
+- The command retrieves the `Resident` from `ResidentManager`.
+- The corresponding `Cca` is retrieved from `CcaManager`.
+- The `Resident` is added to the Cca using `Cca.addResidentToCca(...)`.
+- Exceptions are thrown if the resident or CCA does not exist.
+
+```java
+@Override
+ public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
+     try {
+         Cca cca = ccaManager.getCCAList().stream()
+                 .filter(x -> x.getName().equals(ccaName))
+                 .findFirst()
+                 .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
+
+         Resident resident = residentManager.getResidentList().stream()
+                 .filter(x -> x.getMatricNumber().equals(matriculationNo))
+                 .findFirst()
+                 .orElseThrow(() -> new ResidentNotFoundException(matriculationNo + " not found."));
+
+         cca.addResidentToCca(resident);
+         resident.addCcaToResident(cca, pointsScored);
+
+         ui.showMessage("Resident " + resident + " was added to CCA: " + cca.getName() +
+                 " with " + pointsScored + " points.");
+
+     } catch (CcaNotFoundException | ResidentNotFoundException | ResidentAlreadyInCcaException e) {
+         ui.showError(e.getMessage());
+     }
+ }
+```
+
+### Sequence Diagram
+
 ![add-resident-to-cca.png](images/add-resident-to-cca.png)
+
+## Add EXCO to Cca Command
+
+### Overview
+
+The `add-exco-to-cca` command adds an existing resident as an EXCO for the Cca.
+
+Format:
+`add-exco-to-cca <matric number> <cca name>`
+
+---
+
+### Implementation
+
+- The `Parser` creates a `AddExcoToCcaCommand` object.
+- The command retrieves the `Resident` from `ResidentManager`.
+- The corresponding `Cca` is retrieved from `CcaManager`.
+- The `Resident` is added to the Cca as an EXCO in the `excoResidents` arraylist.
+- Exceptions are thrown if the resident or CCA does not exist.
+
+```java
+@Override
+public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
+   try {
+      Cca cca = ccaManager.getCCAList().stream()
+              .filter(x -> x.getName().equals(ccaName))
+              .findFirst()
+              .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
+   
+      Resident resident = residentManager.getResidentList().stream()
+              .filter(x -> x.getMatricNumber().equals(matriculationNo))
+              .findFirst()
+              .orElseThrow(() -> new ResidentNotFoundException(matriculationNo + " not found."));
+   
+      cca.addExcoToCca(resident);
+      resident.addCcaToResident(cca);
+   
+      ui.showMessage("Resident " + resident + " was added as an EXCO to CCA: " + cca.getName());
+   
+   } catch (CcaNotFoundException | ResidentNotFoundException | ResidentAlreadyInCcaException e) {
+      ui.showError(e.getMessage());
+   }
+}
+```
+
+## Sequence Diagram
+
+![add-exco-to-cca.png](images/add-exco-to-cca.png)
+
+## View all the EXCOs of a Cca
+
+### Overview
+The `view-exco` command display the list of EXCOs of an existing Cca.
+
+Format:
+`view-exco <cca name>`
+
+## Implementation
+
+- The `Parser` creates a `ViewCcaExco` object.
+- The command retrieves the `CcaList` from `CcaManager`.
+- It checks if the `Cca` input is a part of `CcaList`
+- If no it throws a `CcaNotFoundException`.
+- If yes, then is displays the `excoMembers` of a `Cca`
+
+```java
+@Override
+public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
+   try {
+      Cca cca = ccaManager.getCCAList().stream()
+              .filter(x -> x.getName().equals(ccaName))
+              .findFirst()
+              .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
+      ui.showExcoList(cca.getExcos());
+   } catch (CcaNotFoundException e) {
+      ui.showError(e.getMessage());
+   }
+}
+```
+
+## Sequence Diagram
+
+![view-exco.png](images/view-exco.png)
 
 ## CCA Statistics Command
 
