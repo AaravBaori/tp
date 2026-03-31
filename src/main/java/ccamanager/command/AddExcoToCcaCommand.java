@@ -18,16 +18,13 @@ public class AddExcoToCcaCommand extends Command {
 
     private final String matriculationNo;
     private final String ccaName;
-    private final int pointsScored;
 
-    public AddExcoToCcaCommand(String matriculationNo, String ccaName, String pointsScored) {
+    public AddExcoToCcaCommand(String matriculationNo, String ccaName) {
         assert matriculationNo != null : "Matriculation number should not be null";
         assert ccaName != null : "CCA name should not be null";
-        assert pointsScored != null : "Points scored should not be null";
-        assert Integer.parseInt(pointsScored) >= 0 : "Points scored must be greater than or equal to 0";
         this.matriculationNo = matriculationNo;
         this.ccaName = ccaName;
-        this.pointsScored = Integer.parseInt(pointsScored);
+
     }
 
     @Override
@@ -43,7 +40,7 @@ public class AddExcoToCcaCommand extends Command {
                     .findFirst()
                     .orElseThrow(() -> new ResidentNotFoundException(matriculationNo + " not found."));
 
-            cca.addResidentToCca(resident);
+            cca.addExcoToCca(resident);
             resident.addCcaToResident(cca, pointsScored);
 
             ui.showMessage("Resident " + resident + " was added to CCA: " + cca.getName() +
