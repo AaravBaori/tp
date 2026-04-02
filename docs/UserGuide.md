@@ -403,22 +403,22 @@ ________________________________________________________________________________
 # Command Summary
 
 ```
-add-cca <cca name> <level>
+add-cca <cca name>; <level>
 view-cca
 delete-cca <cca name>
 
-add-event <event name> <cca name> <date>
+add-event <event name>; <cca name>; <date>
 view-cca-event <cca name>
-add-resident-to-event <matric number> <event name> <cca name>
+add-resident-to-event <matric number>; <event name>; <cca name>
 view-my-event <matric number>
 
-add-resident <name> <matric number>
+add-resident <name>; <matric number>
 view-resident
 delete-resident <matric number>
 view-points
 
 view-exco <cca name>
-add-exco-to-cca <matric number> <cca name>
+add-exco-to-cca <matric number>; <cca name>
 
 cca-stats
 resident-stats
