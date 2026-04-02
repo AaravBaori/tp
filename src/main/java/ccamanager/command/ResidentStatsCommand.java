@@ -29,7 +29,8 @@ public class ResidentStatsCommand extends Command {
      * @return a hashmap containing the residents in <code>residents</code> and their corresponding total points
      * @throws IllegalArgumentException if <code>residents</code> is empty
      */
-    public static HashMap<Resident, Integer> totalPoints(ArrayList<Resident> residents) throws IllegalArgumentException {
+    public static HashMap<Resident, Integer> totalPoints(ArrayList<Resident> residents)
+            throws IllegalArgumentException {
         if (residents.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -52,7 +53,8 @@ public class ResidentStatsCommand extends Command {
      * @return a list of the most active residents
      * @throws IllegalArgumentException if <code>totalPoints</code> is empty
      */
-    public static ArrayList<Resident> mostActiveResidents (HashMap<Resident, Integer> totalPoints) throws IllegalArgumentException {
+    public static ArrayList<Resident> mostActiveResidents (HashMap<Resident,Integer> totalPoints)
+            throws IllegalArgumentException {
         if (totalPoints.isEmpty()) {
             throw new IllegalArgumentException();
         }
