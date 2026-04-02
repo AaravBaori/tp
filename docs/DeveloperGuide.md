@@ -1091,6 +1091,281 @@ This separation ensures that `Parser` never needs to know about domain state, an
 | `EventNotFoundException` | `AddResidentToEventCommand` | `EventManager.addResidentToEvent()` when the event name does not match any stored event |
 | `DuplicateEventException` | `EventManager` | `EventManager.addEvent()` when an event with the same name already exists; unchecked, so not declared in method signatures |
 
+
+
+## Data Storage
+
+### Overview
+
+CcaLedger persists all application state to plain text files stored in a `data/` directory. The storage layer is implemented entirely within `StorageManager`, which is the only class that performs file I/O. No manager or command class reads from or writes to disk directly.
+
+The `data/` directory is created automatically on first run if it does not exist. All five files are also created automatically — there is no manual setup required.
+
+---
+
+### Architecture
+
+The storage layer sits beneath the Manager layer and is orchestrated by `CcaLedger`:
+```
+CcaLedger
+    │
+    ├── storage.load()   ← called once on startup, before showWelcome()
+    │       │
+    │       └── populates CcaManager, ResidentManager, EventManager
+    │
+    └── storage.save()   ← called after every mutating command
+            │
+            └── snapshots all manager state to disk
+```
+
+`StorageManager` has no dependency on `Ui`, `Parser`, or any `Command` class. It only depends on the three managers and the domain model.
+
+---
+
+### File Layout
+```
+data/
+├── ccas.txt               — CCA entity table
+├── residents.txt          — Resident entity table
+├── events.txt             — Event entity table (FK → ccas.txt)
+├── memberships.txt        — Resident ↔ CCA join table
+└── event_attendance.txt   — Resident ↔ Event join table
+```
+
+All files use **pipe (`|`) as the column delimiter**. Literal pipe characters inside field values are escaped as `\|`, and literal backslashes are escaped as `\\`, so values round-trip without corruption.
+
+---
+
+### File Formats
+
+#### `ccas.txt` — CCA entity table
+
+One row per CCA.
+
+| Column | Description |
+|--------|-------------|
+| `name` | Display name of the CCA |
+| `level` | `CcaLevel` enum value: `HIGH`, `MEDIUM`, `LOW` |
+```
+Basketball|HIGH
+Chess|HALL
+Drama|LOW
+```
+
+---
+
+#### `residents.txt` — Resident entity table
+
+One row per resident.
+
+| Column | Description |
+|--------|-------------|
+| `name` | Full name of the resident |
+| `matricNumber` | Unique matric number (primary key) |
+```
+Alice Tan|A1234567X
+Bob Lee|A7654321Y
+```
+
+---
+
+#### `events.txt` — Event entity table
+
+One row per event. `ccaName` is a foreign key referencing `ccas.txt`.
+
+| Column | Description |
+|--------|-------------|
+| `eventName` | Name of the event |
+| `ccaName` | FK → `ccas.txt` name column |
+| `eventDate` | Date/time string as entered by the user |
+```
+AGM|Basketball|2025-04-01
+Finals|Chess|2025-05-10
+```
+
+---
+
+#### `memberships.txt` — Resident ↔ CCA join table
+
+One row per resident-CCA membership. This table captures the many-to-many relationship between residents and CCAs, along with two attributes that belong to the relationship itself: points earned and EXCO status.
+
+| Column | Description |
+|--------|-------------|
+| `matricNumber` | FK → `residents.txt` matricNumber |
+| `ccaName` | FK → `ccas.txt` name |
+| `points` | Points earned by this resident in this CCA |
+| `isExco` | `true` if the resident is an EXCO of this CCA |
+```
+A1234567X|Basketball|50|false
+A1234567X|Chess|30|true
+A7654321Y|Basketball|20|false
+```
+
+> A resident who is an EXCO (`isExco=true`) is also a regular member of the CCA. On load, the resident is added to both `cca.registeredResidents` and `cca.excoMembers`.
+
+---
+
+#### `event_attendance.txt` — Resident ↔ Event join table
+
+One row per resident-event attendance record. `ccaName` is included alongside `eventName` because event names are not globally unique — two different CCAs may both hold an event called "AGM". Together, `(eventName, ccaName)` form a composite foreign key back to `events.txt`.
+
+| Column | Description |
+|--------|-------------|
+| `matricNumber` | FK → `residents.txt` matricNumber |
+| `eventName` | Composite FK part 1 → `events.txt` eventName |
+| `ccaName` | Composite FK part 2 → `events.txt` ccaName |
+```
+A1234567X|AGM|Basketball
+A7654321Y|AGM|Basketball
+A1234567X|Finals|Chess
+```
+
+---
+
+### Save Behaviour
+
+`StorageManager.save()` is called by `CcaLedger` after every command for which `command.isReadOnly()` returns `false`. It performs a **full snapshot** — all five files are overwritten from scratch on every save. This guarantees the files always reflect the exact current in-memory state.
+```java
+// In CcaLedger.run()
+if (!command.isReadOnly()) {
+    storage.save(ccaManager, residentManager, eventManager);
+}
+```
+
+Read-only commands (all `view-*`, `cca-stats`, `resident-stats`, `help`) override `isReadOnly()` to return `true`, skipping the save step entirely to avoid unnecessary disk writes.
+
+---
+
+### Load Behaviour
+
+`StorageManager.load()` is called once at startup, before `ui.showWelcome()`. It reads all five files and reconstructs the full in-memory state in the managers.
+
+**Load order is critical** because later files contain foreign keys that reference entities defined in earlier files:
+
+| Order | File | Dependencies |
+|-------|------|-------------|
+| 1 | `ccas.txt` | None |
+| 2 | `residents.txt` | None |
+| 3 | `events.txt` | CCAs must exist first |
+| 4 | `memberships.txt` | CCAs and Residents must exist first |
+| 5 | `event_attendance.txt` | Events and Residents must exist first |
+
+If a file does not exist (e.g. on first run), the load method for that file returns immediately without error.
+
+---
+
+### FK Resolution on Load
+
+When loading `events.txt`, `memberships.txt`, and `event_attendance.txt`, `StorageManager` must look up existing in-memory objects by their string identifiers. Three finder methods support this:
+
+| Method | Class | Looks up by |
+|--------|-------|-------------|
+| `CcaManager.findByName(String)` | `CcaManager` | CCA name (case-insensitive) |
+| `ResidentManager.findByMatric(String)` | `ResidentManager` | Matric number (case-insensitive) |
+| `EventManager.findByNameAndCca(String, String)` | `EventManager` | Event name + CCA name (composite, case-insensitive) |
+
+If a FK cannot be resolved (e.g. a CCA was deleted but a stale row remains in `memberships.txt`), the row is **skipped with a warning log** rather than crashing the application. This makes the storage layer resilient to manual edits or partial corruption.
+
+---
+
+### Membership Load Detail
+
+Loading a membership row requires updating state in two places — the `Resident` and the `Cca`:
+```java
+// Resident side — adds CCA to the resident's parallel ccas + points lists
+resident.addCcaToResident(cca, points);
+
+// CCA side — registers the resident in the CCA's member list
+cca.addResidentToCca(resident);
+
+// If isExco, also add to the exco list directly
+if (isExco) {
+    cca.getExcos().add(resident);
+}
+```
+
+> `addExcoToCca()` is intentionally **not** used during load. That method internally calls `addResidentToCca()`, which would throw `ResidentAlreadyInCcaException` since we already called it on the line above. Instead, exco status is restored by adding directly to the exco list after the member registration.
+
+---
+
+### Escape / Unescape
+
+Field values are escaped before writing and unescaped after reading to prevent pipe characters inside values from breaking the column parser:
+
+| Raw value | Stored as |
+|-----------|-----------|
+| `Hall \| Drama` | `Hall \\\| Drama` |
+| `back\slash` | `back\\\\slash` |
+
+Backslashes are escaped first, then pipes, so the two operations never interfere with each other. Unescaping reverses this — pipes first, then backslashes.
+
+---
+
+### Error Resilience
+
+Every load method follows the same defensive pattern:
+
+- If the file does not exist → return silently (first run case)
+- If a line has too few fields → log a warning, skip the line
+- If a FK cannot be resolved → log a warning, skip the line
+- If a value fails to parse (e.g. non-integer points) → log a warning, skip the line
+- If a duplicate is detected → catch the exception, log a warning, skip the line
+
+This means a single corrupt row never prevents the rest of the file from loading.
+
+---
+
+### Sequence Diagram — Save
+```
+CcaLedger          Command            StorageManager
+    │                  │                    │
+    │  execute(...)     │                    │
+    │─────────────────>│                    │
+    │                  │                    │
+    │<─────────────────│                    │
+    │  [isReadOnly=false]                   │
+    │  save(ccaManager, residentManager,    │
+    │       eventManager)                   │
+    │──────────────────────────────────────>│
+    │                  │    saveCcas()      │
+    │                  │    saveResidents() │
+    │                  │    saveEvents()    │
+    │                  │    saveMemberships()
+    │                  │    saveEventAttendance()
+    │<──────────────────────────────────────│
+```
+
+---
+
+### Sequence Diagram — Load
+```
+CcaLedger                    StorageManager
+    │                               │
+    │  load(ccaManager,             │
+    │       residentManager,        │
+    │       eventManager)           │
+    │──────────────────────────────>│
+    │                  loadCcas()   │──> populates CcaManager
+    │                  loadResidents() > populates ResidentManager
+    │                  loadEvents() │──> populates EventManager (resolves CCA FK)
+    │                  loadMemberships() > links Residents ↔ CCAs
+    │                  loadEventAttendance() > links Residents ↔ Events
+    │<──────────────────────────────│
+    │
+    │  showWelcome()
+```
+
+---
+
+### Design Considerations
+
+**Why overwrite all files on every save?**
+Simplicity and correctness. A full snapshot guarantees the files are never stale. For the scale of data this application handles (a single hall's CCAs and residents), the performance cost is negligible.
+
+**Why separate join tables instead of embedding in entity files?**
+A resident belongs to multiple CCAs with different point values. Embedding that in `residents.txt` would require a variable-length nested format that is significantly harder to parse and maintain. Separate join tables keep every file uniformly structured with a fixed number of columns per row.
+
+
 ## Product scope
 ### Target user profile
 ```
