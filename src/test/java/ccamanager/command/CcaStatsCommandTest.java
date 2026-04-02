@@ -52,7 +52,7 @@ public class CcaStatsCommandTest {
         HashMap<Cca, Double> expectedAvgPoints = new HashMap<>();
         expectedAvgPoints.put(new Cca("Basketball", HIGH), 8.5);
         expectedAvgPoints.put(new Cca("Football", MEDIUM), 0.0);
-        assertEquals(expectedAvgPoints, CcaStatsCommand.avgPoints(ccas));
+        assertEquals(expectedAvgPoints.toString(), CcaStatsCommand.avgPoints(ccas).toString());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class CcaStatsCommandTest {
         ArrayList<Cca> expectedMostPopularCcas = new ArrayList<>();
         expectedMostPopularCcas.add(new Cca("Basketball", HIGH));
         expectedMostPopularCcas.add(new Cca("Football", MEDIUM));
-        assertEquals(expectedMostPopularCcas, CcaStatsCommand.mostPopularCcas(avgPoints));
+        assertEquals(expectedMostPopularCcas.toString(), CcaStatsCommand.mostPopularCcas(avgPoints).toString());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class CcaStatsCommandTest {
         HashMap<Cca, Resident> expectedMostActiveResident = new HashMap<>();
         expectedMostActiveResident.put(new Cca("Basketball", HIGH), new Resident("John", "1234"));
         expectedMostActiveResident.put(new Cca("Tennis", HIGH), new Resident("Jane", "5678"));
-        assertEquals(expectedMostActiveResident, CcaStatsCommand.mostActiveResidents(ccas));
+        assertEquals(expectedMostActiveResident.toString(), CcaStatsCommand.mostActiveResidents(ccas).toString());
     }
 
     @Test

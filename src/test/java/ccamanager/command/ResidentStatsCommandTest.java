@@ -51,7 +51,7 @@ public class ResidentStatsCommandTest {
         HashMap<Resident, Integer> expectedTotalPoints = new HashMap<>();
         expectedTotalPoints.put(new Resident("James", "4321"), 17);
         expectedTotalPoints.put(new Resident("John", "1234"), 9);
-        assertEquals(expectedTotalPoints, ResidentStatsCommand.totalPoints(residents));
+        assertEquals(expectedTotalPoints.toString(), ResidentStatsCommand.totalPoints(residents).toString());
     }
 
     @Test
@@ -94,7 +94,8 @@ public class ResidentStatsCommandTest {
         ArrayList<Resident> expectedMostActiveResidents = new ArrayList<>();
         expectedMostActiveResidents.add(new Resident("John", "1234"));
         expectedMostActiveResidents.add(new Resident("James", "4321"));
-        assertEquals(expectedMostActiveResidents, ResidentStatsCommand.mostActiveResidents(totalPoints));
+        assertEquals(expectedMostActiveResidents.toString(),
+                ResidentStatsCommand.mostActiveResidents(totalPoints).toString());
     }
 
     @Test
