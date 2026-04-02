@@ -42,7 +42,7 @@ public class CcaStatsCommand extends Command {
             } else {
                 double totalPoints = 0.0;
                 for (Resident resident : registeredResidents) {
-                    totalPoints += resident.getCcaMap().get(cca);
+                    totalPoints += resident.getCcaPoints().get(cca);
                 }
                 double avg = totalPoints / registeredResidents.size();
                 avgPoints.put(cca, avg);
@@ -91,7 +91,7 @@ public class CcaStatsCommand extends Command {
             for (Resident resident : registeredResidents) {
                 if (mostActiveResident == null) {
                     mostActiveResident = resident;
-                } else if (resident.getCcaMap().get(cca) > mostActiveResident.getCcaMap().get(cca)) {
+                } else if (resident.getCcaPoints().get(cca) > mostActiveResident.getCcaPoints().get(cca)) {
                     mostActiveResident = resident;
                 }
             }

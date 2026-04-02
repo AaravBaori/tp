@@ -4,6 +4,7 @@ import ccamanager.manager.CcaManager;
 import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.model.Cca;
+import ccamanager.model.Resident;
 import ccamanager.parser.Parser;
 import ccamanager.ui.Ui;
 import org.junit.jupiter.api.BeforeEach;
@@ -100,5 +101,45 @@ public class CcaStatsCommandTest {
     @Test
     void mostPopularCcas_noCcas_failure() {
         avgPoints_noCcas_failure(); // mostPopularCcas() calls averagePoints() anyway
+    }
+
+    @Test
+    void mostActiveResidents_success() {
+        Command addCcaBasketball = parser.parse("add-cca Basketball HIGH");
+        addCcaBasketball.execute(ccaManager, residentManager, eventManager, ui);
+        Command addCcaTennis = parser.parse("add-cca Tennis LOW");
+        addCcaTennis.execute(ccaManager, residentManager, eventManager, ui);
+        Command addResidentJohn = parser.parse("add-resident John 1234");
+        addResidentJohn.execute(ccaManager, residentManager, eventManager, ui);
+        Command addResidentJames = parser.parse("add-resident James 4321");
+        addResidentJames.execute(ccaManager, residentManager, eventManager, ui);
+        Command addResidentJane = parser.parse("add-resident Jane 5678");
+        addResidentJane.execute(ccaManager, residentManager, eventManager, ui);
+        Command addJohnToBasketball = parser.parse("add-resident-to-cca 1234 Basketball 9");
+        addJohnToBasketball.execute(ccaManager, residentManager, eventManager, ui);
+        Command addJamesToBasketball = parser.parse("add-resident-to-cca 4321 Basketball 8");
+        addJamesToBasketball.execute(ccaManager, residentManager, eventManager, ui);
+        Command addJaneToTennis = parser.parse("add-resident-to-cca 5678 Tennis 8");
+        addJaneToTennis.execute(ccaManager, residentManager, eventManager, ui);
+        ArrayList<Cca> ccas = ccaManager.getCCAList();
+        assert ccas.size() == 2;
+        assert residentManager.getResidentList().size() == 3;
+        HashMap<Cca, Resident> expectedMostActiveResident = new HashMap<>();
+        expectedMostActiveResident.put(new Cca("Basketball", HIGH), new Resident("John", "1234"));
+        expectedMostActiveResident.put(new Cca("Tennis", HIGH), new Resident("Jane", "5678"));
+        assertEquals(expectedMostActiveResident, CcaStatsCommand.mostActiveResidents(ccas));
+    }
+
+    @Test
+    void mostActiveResidents_noCcas_failure() {
+        ArrayList<Cca> ccas = ccaManager.getCCAList();
+        assert ccas.isEmpty();
+        boolean caughtException = false;
+        try {
+            HashMap<Cca, Resident> avgPoints = CcaStatsCommand.mostActiveResidents(ccas);
+        } catch (IllegalArgumentException e) {
+            caughtException = true;
+        }
+        assertTrue(caughtException);
     }
 }
