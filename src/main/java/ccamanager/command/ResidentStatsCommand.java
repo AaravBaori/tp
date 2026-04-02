@@ -14,21 +14,26 @@ public class ResidentStatsCommand extends Command {
     @Override
     public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         ArrayList<Resident> residents = residentManager.getResidentList();
-        if (residents.isEmpty()) {
+        try {
+            HashMap<Resident, Integer> totalPoints = totalPoints(residents);
+            ArrayList<Resident> mostActiveResident = mostActiveResidents(totalPoints);
+            ui.showResidentStats(totalPoints, mostActiveResident);
+        } catch (IllegalArgumentException e) {
             ui.showMessage("There are no residents currently. Please add residents using add-resident command");
-            return;
         }
-        HashMap<Resident, Integer> totalPoints = totalPoints(residents);
-        ArrayList<Resident> mostActiveResident = mostActiveResidents(totalPoints);
-        ui.showResidentStats(totalPoints, mostActiveResident);
     }
 
     /**
      * Computes the total points across all CCAs for each resident
      * @param residents a list of residents
      * @return a hashmap containing the residents in <code>residents</code> and their corresponding total points
+     * @throws IllegalArgumentException if <code>residents</code> is empty
      */
-    private static HashMap<Resident, Integer> totalPoints(ArrayList<Resident> residents) {
+    public static HashMap<Resident, Integer> totalPoints(ArrayList<Resident> residents)
+            throws IllegalArgumentException {
+        if (residents.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
         HashMap<Resident, Integer> totalPoints = new HashMap<>();
         for (Resident resident : residents) {
             ArrayList<Integer> points = resident.getPoints();
@@ -46,8 +51,13 @@ public class ResidentStatsCommand extends Command {
      * Finds the most active residents across all CCAs based on their total points
      * @param totalPoints a hashmap containing the residents and their corresponding total points
      * @return a list of the most active residents
+     * @throws IllegalArgumentException if <code>totalPoints</code> is empty
      */
-    private static ArrayList<Resident> mostActiveResidents (HashMap<Resident, Integer> totalPoints) {
+    public static ArrayList<Resident> mostActiveResidents (HashMap<Resident,Integer> totalPoints)
+            throws IllegalArgumentException {
+        if (totalPoints.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
         ArrayList<Resident> mostActiveResidents = new ArrayList<>();
         int max = 0;
         for (Resident resident : totalPoints.keySet()) {

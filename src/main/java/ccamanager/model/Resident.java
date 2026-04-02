@@ -82,7 +82,7 @@ public class Resident {
      * Returns a hashmap with the CCAs and the corresponding number of points that the resident has
      * @return a hashmap with the CCAs and the corresponding number of points that the resident has
      */
-    public HashMap<Cca, Integer> getCcaMap(){
+    public HashMap<Cca, Integer> getCcaPoints(){
         HashMap<Cca, Integer> map = new HashMap<>();
         for (int i = 0; i < ccaRegisteredIn.size(); i++) {
             map.put(ccaRegisteredIn.get(i), points.get(i));

@@ -466,13 +466,13 @@ If the resident does not exist, a ResidentNotFoundException is thrown and handle
 @Override
 ```java
 public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-try {
-String residentName = residentManager.nameGivenMatricNumber(matricNumber);
-residentManager.deleteResident(matricNumber);
-ui.showMessage("Resident deleted: " + residentName);
-} catch (ResidentNotFoundException e) {
-ui.showMessage(e.getMessage());
-}
+   try {
+      String residentName = residentManager.nameGivenMatricNumber(matricNumber);
+      residentManager.deleteResident(matricNumber);
+      ui.showMessage("Resident deleted: " + residentName);
+   } catch (ResidentNotFoundException e) {
+      ui.showMessage(e.getMessage());
+   }
 }
 ```
 
@@ -596,13 +596,13 @@ Format:
 @Override
 public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
    ArrayList<Resident> residents = residentManager.getResidentList();
-   if (residents.isEmpty()) {
+   try {
+      HashMap<Resident, Integer> totalPoints = totalPoints(residents);
+      ArrayList<Resident> mostActiveResident = mostActiveResidents(totalPoints);
+      ui.showResidentStats(totalPoints, mostActiveResident);
+   } catch (IllegalArgumentException e) {
       ui.showMessage("There are no residents currently. Please add residents using add-resident command");
-      return;
    }
-   HashMap<Resident, Integer> totalPoints = totalPoints(residents);
-   ArrayList<Resident> mostActiveResident = mostActiveResidents(totalPoints);
-   ui.showResidentStats(totalPoints, mostActiveResident);
 }
 ```
 

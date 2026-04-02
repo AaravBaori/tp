@@ -29,8 +29,9 @@ public class CcaStatsCommand extends Command {
      * Computes the average number of points for each CCA in <code>ccas</code>
      * @param ccas the list of CCAs
      * @return a hashmap of CCAs and their corresponding average points
+     * @throws IllegalArgumentException if <code>ccas</code> is empty
      */
-    private static HashMap<Cca, Double> avgPoints(ArrayList<Cca> ccas) throws IllegalArgumentException {
+    public static HashMap<Cca, Double> avgPoints(ArrayList<Cca> ccas) throws IllegalArgumentException {
         if (ccas.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -40,9 +41,9 @@ public class CcaStatsCommand extends Command {
             if (registeredResidents.isEmpty()) {
                 avgPoints.put(cca, 0.0);
             } else {
-                double totalPoints = 0;
+                double totalPoints = 0.0;
                 for (Resident resident : registeredResidents) {
-                    totalPoints += resident.getCcaMap().get(cca);
+                    totalPoints += resident.getCcaPoints().get(cca);
                 }
                 double avg = totalPoints / registeredResidents.size();
                 avgPoints.put(cca, avg);
@@ -55,8 +56,9 @@ public class CcaStatsCommand extends Command {
      * Finds the most popular CCAs based on their average points
      * @param avgPoints a hashmap of CCAs and their corresponding average points
      * @return a list containing the CCAs with the highest number of points
+     * @throws IllegalArgumentException if <code>avgPoints</code> is empty
      */
-    private static ArrayList<Cca> mostPopularCcas(HashMap<Cca, Double> avgPoints) throws IllegalArgumentException {
+    public static ArrayList<Cca> mostPopularCcas(HashMap<Cca, Double> avgPoints) throws IllegalArgumentException {
         if  (avgPoints.isEmpty()) {
             throw  new IllegalArgumentException();
         }
@@ -79,8 +81,9 @@ public class CcaStatsCommand extends Command {
      * Finds the resident with the most points for each CCA
      * @param ccas the list of CCAs
      * @return a hashmap containing the CCAs and their most active member
+     * @throws IllegalArgumentException if <code>ccas</code> is empty
      */
-    private static HashMap<Cca, Resident> mostActiveResidents(ArrayList<Cca> ccas) throws IllegalArgumentException {
+    public static HashMap<Cca, Resident> mostActiveResidents(ArrayList<Cca> ccas) throws IllegalArgumentException {
         if (ccas.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -91,7 +94,7 @@ public class CcaStatsCommand extends Command {
             for (Resident resident : registeredResidents) {
                 if (mostActiveResident == null) {
                     mostActiveResident = resident;
-                } else if (resident.getCcaMap().get(cca) > mostActiveResident.getCcaMap().get(cca)) {
+                } else if (resident.getCcaPoints().get(cca) > mostActiveResident.getCcaPoints().get(cca)) {
                     mostActiveResident = resident;
                 }
             }
