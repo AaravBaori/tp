@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static ccamanager.enumerations.CcaLevel.HIGH;
-import static ccamanager.enumerations.CcaLevel.MEDIUM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -90,7 +88,7 @@ public class CcaStatsCommandTest {
         assert ccas.size() == 3 : "There should be 3 CCAs.";
         assert residentManager.getResidentList().size() == 3 : "There should be 3 residents.";
         HashMap<Cca, Double> avgPoints = CcaStatsCommand.avgPoints(ccas);
-        assertEquals("[Football(MEDIUM): 1 residents, Basketball(HIGH): 1 residents]",
+        assertEquals("[Basketball(HIGH): 1 residents, Football(MEDIUM): 1 residents]",
                 CcaStatsCommand.mostPopularCcas(avgPoints).toString());
     }
 
@@ -120,7 +118,7 @@ public class CcaStatsCommandTest {
         ArrayList<Cca> ccas = ccaManager.getCCAList();
         assert ccas.size() == 2 :  "There should be 2 CCAs.";
         assert residentManager.getResidentList().size() == 3 :  "There should be 3 residents.";
-        assertEquals("{Basketball(HIGH): 2 residents=John | 1234, Tennis(LOW): 1 residents=Jane | 5678}",
+        assertEquals("{Tennis(LOW): 1 residents=Jane | 5678, Basketball(HIGH): 2 residents=John | 1234}",
                 CcaStatsCommand.mostActiveResidents(ccas).toString());
     }
 
