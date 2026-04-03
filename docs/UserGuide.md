@@ -144,6 +144,21 @@ Here are the events under Basketball:
 2. Friendly-Match | 5/4/26
 _________________________________________________________________________________
 ```
+---
+
+### Adding Resident to a CCA: `add-resident-to-cca`
+
+Add an existing resident to a CCA and assign their points for participation.
+
+Format: `add-resident-to-cca <matric number> <cca name> <points>`
+
+Example:
+```
+> add-resident-to-cca A1234567B Basketball 10
+_________________________________________________________________________________
+ Resident John | A1234567B was added to CCA: Basketball with 10 points.
+_________________________________________________________________________________
+```
 
 ---
 
