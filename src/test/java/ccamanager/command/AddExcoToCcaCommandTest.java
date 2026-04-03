@@ -25,7 +25,7 @@ public class AddExcoToCcaCommandTest {
     }
 
     @Test
-    void execute_AddExcoToCca_success(){
+    void executeAddExcoToCcasuccess(){
         new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, eventManager, ui);
         new AddResidentCommand("John", "A1234567B")
                 .execute(ccaManager, residentManager, eventManager, ui);
@@ -36,7 +36,7 @@ public class AddExcoToCcaCommandTest {
     }
 
     @Test
-    void execute_AddExcoToCcaCommand_ccaNotFound(){
+    void executeAddExcoToCcaCommandccaNotFound(){
         new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, eventManager, ui);
         new AddResidentCommand("John", "A1234567B")
                 .execute(ccaManager, residentManager, eventManager, ui);
@@ -46,7 +46,7 @@ public class AddExcoToCcaCommandTest {
     }
 
     @Test
-    void execute_AddExcoToCca_residentNotFound(){
+    void executeAddExcoToCcaresidentNotFound(){
         new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, eventManager, ui);
         new AddResidentCommand("John", "A1234567B")
                 .execute(ccaManager, residentManager, eventManager, ui);
@@ -56,7 +56,7 @@ public class AddExcoToCcaCommandTest {
     }
 
     @Test
-    void execute_AddExcoToCca_residentAlreadyInExco(){
+    void executeAddExcoToCcaResidentAlreadyInExco(){
         new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, eventManager, ui);
         new AddResidentCommand("John", "A1234567B")
                 .execute(ccaManager, residentManager, eventManager, ui);

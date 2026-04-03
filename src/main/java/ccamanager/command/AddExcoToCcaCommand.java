@@ -53,7 +53,8 @@ public class AddExcoToCcaCommand extends Command {
 
             ui.showMessage("Resident " + resident + " was added as an EXCO to CCA: " + cca.getName());
 
-        } catch (CcaNotFoundException | ResidentNotFoundException | ResidentAlreadyInCcaException | ResidentAlreadyInExcoException e) {
+        } catch (CcaNotFoundException | ResidentNotFoundException |
+                 ResidentAlreadyInCcaException | ResidentAlreadyInExcoException e) {
             ui.showError(e.getMessage());
         }
     }
