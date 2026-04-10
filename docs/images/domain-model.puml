@@ -1,0 +1,67 @@
+@startuml domain-model
+
+skinparam classAttributeIconSize 0
+skinparam defaultFontSize 13
+skinparam classBorderColor #333333
+skinparam classBackgroundColor #f9f9f9
+skinparam ArrowColor #333333
+
+title Domain Model
+
+enum CcaLevel {
+    HIGH
+    MEDIUM
+    LOW
+    UNKNOWN
+}
+
+class Cca {
+    - name : String
+    - level : CcaLevel
+    - registeredResidents : ArrayList<Resident>
+    - excoMembers : ArrayList<Resident>
+    + getName() : String
+    + getLevel() : CcaLevel
+    + addResidentToCca(resident : Resident) : void
+    + addExcoToCca(resident : Resident) : void
+    + getExcos() : ArrayList<Resident>
+}
+
+class Resident {
+    - name : String
+    - matricNumber : String
+    - ccas : ArrayList<Cca>
+    - points : ArrayList<Integer>
+    + getName() : String
+    + getMatricNumber() : String
+    + addCcaToResident(cca : Cca, points : int) : void
+    + getCcas() : ArrayList<Cca>
+    + getPoints() : ArrayList<Integer>
+}
+
+class Event {
+    - eventName : String
+    - cca : Cca
+    - dateTime : String
+    - attendees : ArrayList<Resident>
+    + getEventName() : String
+    + getCca() : Cca
+    + addAttendee(resident : Resident) : void
+    + getAttendees() : ArrayList<Resident>
+}
+
+Cca "1" --> "0..*" Resident : registeredResidents
+Cca "1" --> "0..*" Resident : excoMembers
+Cca --> CcaLevel : uses
+Resident "0..*" --> "0..*" Cca : belongs to
+Event "0..*" --> "1" Cca : belongs to
+Event "0..*" --> "0..*" Resident : attended by
+
+note bottom of Cca
+  Domain objects have no
+  outward dependencies —
+  no UI, Parser, or Manager
+  references.
+end note
+
+@enduml

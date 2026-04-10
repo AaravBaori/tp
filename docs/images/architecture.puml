@@ -1,0 +1,75 @@
+@startuml highLevel-architecture
+
+' Global Styling
+skinparam componentStyle rectangle
+skinparam linetype ortho
+' nodesep controls horizontal spacing globally
+skinparam nodesep 100
+skinparam ranksep 60
+skinparam defaultFontSize 13
+skinparam padding 6
+skinparam ArrowColor #333333
+skinparam ComponentBorderColor #555555
+skinparam ComponentBackgroundColor #FEFEFE
+skinparam RectangleBorderColor #777777
+skinparam RectangleBorderThickness 1
+
+' --- Entry & Orchestration Layer ---
+rectangle "App Entry" as Entry {
+    component "Main" as Main
+}
+
+rectangle "Core Logic" as Core {
+    component "CcaLedger" as CcaLedger
+}
+
+' --- Interaction Layer ---
+rectangle "Interface & Parsing" as Interface {
+    component "Ui" as Ui
+    component "Parser" as Parser
+}
+
+' --- Action Layer ---
+rectangle "Execution" as Execution {
+    component "Command" as Command <<component>>
+}
+
+' --- Management Layer ---
+rectangle "Managers" as MGR {
+    component "CcaManager" as CM
+    component "ResidentManager" as RM
+    component "EventManager" as EM
+}
+
+' --- Data Layer ---
+rectangle "Domain Model" as DM {
+    component "Cca" as Cca
+    component "Resident" as Resident
+    component "Event" as Event
+    component "CcaLevel" as CcaLevel
+}
+
+' --- Relationships & Spacing ---
+
+Main -down-> CcaLedger : instantiates & runs
+
+' Pushing Interface and Execution further apart horizontally
+Interface -right[hidden]---- Execution
+
+CcaLedger -down-> Ui : reads/shows
+CcaLedger -down-> Parser : uses
+Parser -right-> Command : creates
+CcaLedger -down-> Command : executes
+
+Command -down-> CM
+Command -down-> RM
+Command -down-> EM
+
+CM -down-> Cca
+RM -down-> Resident
+EM -down-> Event
+
+Cca -right-> CcaLevel : uses
+Event -left-> Cca : belongs to
+
+@enduml

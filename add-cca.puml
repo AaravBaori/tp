@@ -1,0 +1,25 @@
+@startuml
+actor User
+participant Ui
+participant CcaLedger
+participant Parser
+participant AddCcaCommand
+participant CcaManager
+
+User -> Ui: enter "add-cca Robotics"
+Ui -> CcaLedger: input
+
+CcaLedger -> Parser: parse(input)
+Create AddCcaCommand
+Parser -> AddCcaCommand: new AddCcaCommand(...)
+
+CcaLedger -> AddCcaCommand: execute(...)
+
+AddCcaCommand -> CcaManager: addCCA(ccaName)
+
+alt success
+    AddCcaCommand -> Ui: showMessage(...)
+else duplicate
+    AddCcaCommand -> Ui: showError(...)
+end
+@enduml

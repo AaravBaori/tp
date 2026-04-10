@@ -1,0 +1,24 @@
+@startuml
+actor User
+participant Ui
+participant CcaLedger
+participant Parser
+participant DeleteCcaCommand
+participant CcaManager
+
+User -> Ui: enter "delete-cca Robotics"
+Ui -> CcaLedger: input
+
+CcaLedger -> Parser: parse(input)
+Parser -> DeleteCcaCommand: new DeleteCcaCommand(...)
+
+CcaLedger -> DeleteCcaCommand: execute(...)
+
+DeleteCcaCommand -> CcaManager: deleteCca(ccaName)
+
+alt CCA exists
+    DeleteCcaCommand -> Ui: showMessage("CCA deleted: ...")
+else CCA not found
+    DeleteCcaCommand -> Ui: showMessage(error message)
+end
+@enduml

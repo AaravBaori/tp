@@ -1,0 +1,65 @@
+@startuml ui-parsing
+
+' Global optimization for A4 width
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam defaultFontSize 12
+skinparam maxMessageSize 100
+skinparam nodesep 30
+skinparam ranksep 40
+
+' Styling
+skinparam class {
+    BorderColor #333333
+    BackgroundColor #f9f9f9
+}
+skinparam ArrowColor #333333
+
+title UI and Parsing Layer (A4 Optimized)
+
+class Ui {
+    - scanner : Scanner
+    + readInput() : String
+    + showMessage(msg) : void
+    + showError(msg) : void
+    .. Display Methods ..
+    + showCcaList(List<Cca>) : void
+    + showResidentList(List<Res>) : void
+    + showCcaPoints(List<Res>) : void
+    + showExcoList(List<Res>) : void
+    + viewMyCcas(List<Evt>) : void
+    + viewMatchingCcas(List<Evt>) : void
+    .. Stats ..
+    + showCcaStats(...) : void
+    + showResidentStats(...) : void
+    + showWelcome() : void
+}
+
+' Positioning Parser and Command to the right of UI
+package "Parsing Logic" <<Rectangle>> {
+    class Parser {
+        + parse(input) : Command
+        - getCcaLevel(lvl) : CcaLevel
+    }
+
+    interface Command <<interface>> {
+        + execute(CM, RM, EM, Ui) : void
+        + isExit() : boolean
+        + isReadOnly() : boolean
+    }
+}
+
+' Layout and Relationships
+Ui -[hidden]right-> Parser
+
+Parser .down.> Command : creates >
+Ui .down.> Cca : displays
+Ui .down.> Resident : displays
+Ui .down.> Event : displays
+
+note bottom of Parser
+  Parser instantiates
+  Command subclasses.
+end note
+
+@enduml

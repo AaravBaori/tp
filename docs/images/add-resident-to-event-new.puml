@@ -1,0 +1,58 @@
+@startuml add-resident-to-event
+
+skinparam defaultFontSize 12
+skinparam SequenceArrowThickness 1.2
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+skinparam maxMessageSize 150
+
+title Add Resident to Event (Optimized)
+
+actor ":User" as User
+participant "ccaLedger" as CL
+participant "ui" as Ui
+participant "parser" as Parser
+participant "cmd : AddResToEvtCmd" as Command
+box "Logic Layer" #f2f2f2
+    participant "Managers" as MGR
+end box
+
+ref over User, CL, Ui, Parser, Command : SD_CommandExecution
+
+' Data retrieval grouped
+Command -> MGR : getResidentList()
+activate MGR
+MGR --> Command : residents
+deactivate MGR
+
+Command -> MGR : getCCAList()
+activate MGR
+MGR --> Command : ccas
+deactivate MGR
+
+' Logic Flow
+alt Resident or CCA not found
+    Command -> Ui : showError("Not found")
+    activate Ui
+    Ui --> Command
+    deactivate Ui
+else Valid Resident & CCA
+    Command -> MGR : addResidentToEvent(...)
+    activate MGR
+
+    alt Event not found
+        MGR --> Command : throws Exception
+        Command -> Ui : showError("Event not found")
+    else Event found
+        MGR --> Command : success
+        deactivate MGR
+        Command -> Ui : showMessage("Added...")
+        activate Ui
+        Ui --> Command
+        deactivate Ui
+    end
+end
+
+Command --> CL
+deactivate Command
+
+@enduml

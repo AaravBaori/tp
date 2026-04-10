@@ -1,0 +1,33 @@
+@startuml view-cca
+
+skinparam defaultFontSize 13
+skinparam SequenceArrowThickness 1.5
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+
+title view-cca Command
+
+actor ":User" as User
+participant "ccaLedger : CcaLedger" as CcaLedger
+participant "ui : Ui" as Ui
+participant "parser : Parser" as Parser
+participant "command : ViewCcaCommand" as Command
+participant "ccaManager : CcaManager" as CcaManager
+
+ref over User, CcaLedger, Ui, Parser, Command
+  SD_CommandExecution
+end ref
+
+Command -> CcaManager : getCCAList()
+activate CcaManager
+CcaManager --> Command : ccaList : ArrayList<Cca>
+deactivate CcaManager
+
+Command -> Ui : showCcaList(ccaList)
+activate Ui
+Ui --> Command
+deactivate Ui
+
+Command --> CcaLedger
+deactivate Command
+
+@enduml

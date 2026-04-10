@@ -1,0 +1,43 @@
+@startuml cca-stats
+
+skinparam defaultFontSize 13
+skinparam SequenceArrowThickness 1.5
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+
+title cca-stats Command
+
+actor ":User" as User
+participant "ccaLedger : CcaLedger" as CcaLedger
+participant "ui : Ui" as Ui
+participant "parser : Parser" as Parser
+participant "command : CcaStatsCommand" as Command
+participant "ccaManager : CcaManager" as CcaManager
+
+ref over User, CcaLedger, Ui, Parser, Command
+  SD_CommandExecution
+end ref
+
+Command -> CcaManager : getCCAList()
+activate CcaManager
+CcaManager --> Command : ccaList : ArrayList<Cca>
+deactivate CcaManager
+
+alt no CCAs exist
+    Command -> Ui : showMessage("No CCAs currently...")
+    activate Ui
+    Ui --> Command
+    deactivate Ui
+else CCAs exist
+    Command -> Command : avgPoints(ccaList)
+    Command -> Command : mostPopularCca(avgPoints)
+    Command -> Command : mostActiveResidents(ccaList)
+    Command -> Ui : showCcaStats(avgPoints, mostPopularCca, mostActiveResidents)
+    activate Ui
+    Ui --> Command
+    deactivate Ui
+end
+
+Command --> CcaLedger
+deactivate Command
+
+@enduml

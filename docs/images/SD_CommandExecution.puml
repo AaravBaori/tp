@@ -1,0 +1,35 @@
+@startuml SD_CommandExecution
+
+skinparam defaultFontSize 13
+skinparam SequenceArrowThickness 1.5
+skinparam SequenceBoxBorderColor #333333
+skinparam SequenceLifeLineBorderColor #333333
+skinparam SequenceParticipantBorderColor #333333
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+
+title SD_CommandExecution [ref]
+
+actor ":User" as User
+participant "ccaLedger : CcaLedger" as CcaLedger
+participant "ui : Ui" as Ui
+participant "parser : Parser" as Parser
+participant "command : Command" as Command
+
+User -> CcaLedger : enters input
+activate CcaLedger
+
+CcaLedger -> Ui : readInput()
+activate Ui
+Ui --> CcaLedger : input : String
+deactivate Ui
+
+CcaLedger -> Parser : parse(input)
+activate Parser
+Parser -> Command ** : new XxxCommand(args)
+Parser --> CcaLedger : command : Command
+deactivate Parser
+
+CcaLedger -> Command : execute(ccaManager, residentManager, eventManager, ui)
+activate Command
+
+@enduml

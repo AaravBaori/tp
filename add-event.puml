@@ -1,0 +1,35 @@
+
+---
+
+# ✅ **3. PlantUML (Sequence Diagram)**
+
+👉 Simple, consistent with your other diagrams, includes `CcaLedger`
+
+```plantuml
+@startuml
+actor User
+participant Ui
+participant CcaLedger
+participant Parser
+participant AddEventCommand
+participant CcaManager
+participant EventManager
+
+User -> Ui: enter "add-event Hackathon ComputingClub 2026-04-01"
+Ui -> CcaLedger: input
+
+CcaLedger -> Parser: parse(input)
+Parser -> AddEventCommand: new AddEventCommand(...)
+
+CcaLedger -> AddEventCommand: execute(...)
+
+AddEventCommand -> CcaManager: getCCAList()
+AddEventCommand -> CcaManager: find CCA by name
+
+alt CCA exists
+    AddEventCommand -> EventManager: addEvent(eventName, cca, dateTime)
+    AddEventCommand -> Ui: showMessage(...)
+else CCA not found
+    AddEventCommand -> Ui: showError(...)
+end
+@enduml

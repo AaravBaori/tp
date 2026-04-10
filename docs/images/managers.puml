@@ -1,0 +1,64 @@
+@startuml managers
+
+' Force vertical stacking
+allow_mixing
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam defaultFontSize 12
+' Wraps long method names
+skinparam maxMessageSize 120
+skinparam nodesep 20
+skinparam ranksep 40
+
+' Styling
+skinparam class {
+    BorderColor #333333
+    BackgroundColor #f9f9f9
+}
+skinparam ArrowColor #333333
+
+title Managers Layer (A4 Optimized)
+
+class CcaManager {
+    - ccaList : ArrayList<Cca>
+    + addCCA(name, level) : void
+    + deleteCca(name) : void
+    + getCCAList() : ArrayList<Cca>
+    + findByName(name) : Cca
+}
+
+class ResidentManager {
+    - residentList : ArrayList<Resident>
+    + addResident(name, matric) : void
+    + deleteResident(matric) : void
+    + getResidentList() : ArrayList<Resident>
+    + nameGivenMatric(matric) : String
+    + matchingResident(matric) : Resident
+    + findByMatric(matric) : Resident
+}
+
+class EventManager {
+    - eventList : ArrayList<Event>
+    + addEvent(name, cca, dateTime) : void
+    + addResidentToEvent(name, cca, res) : void
+    + viewMyEvents(matric) : ArrayList<Event>
+    + viewCcaEvents(ccaName) : ArrayList<Event>
+    + findByNameAndCca(name, ccaName) : Event
+}
+
+' Use vertical layout cues (-down-) to force a narrow column
+CcaManager -down-> Cca : owns >
+ResidentManager -down-> Resident : owns >
+EventManager -down-> Event : owns >
+
+' Stacking the managers vertically
+CcaManager -[hidden]down- ResidentManager
+ResidentManager -[hidden]down- EventManager
+
+note right of CcaManager
+  Managers only depend on
+  Domain Model objects.
+  No UI/Parser references.
+end note
+
+@enduml

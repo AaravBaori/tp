@@ -1,0 +1,36 @@
+
+---
+
+# ✅ **3. PlantUML Diagram**
+
+👉 Keep it simple but show the **3-step validation flow** (this is the only extra complexity)
+
+```plantuml
+@startuml
+actor User
+participant Ui
+participant CcaLedger
+participant Parser
+participant AddResidentToEventCommand
+participant ResidentManager
+participant CcaManager
+participant EventManager
+
+User -> Ui: enter "add-resident-to-event A123 Hackathon ComputingClub"
+Ui -> CcaLedger: input
+
+CcaLedger -> Parser: parse(input)
+Parser -> AddResidentToEventCommand: new AddResidentToEventCommand(...)
+
+CcaLedger -> AddResidentToEventCommand: execute(...)
+
+AddResidentToEventCommand -> ResidentManager: findResident(matricNumber)
+AddResidentToEventCommand -> CcaManager: findCca(ccaName)
+
+alt all exist
+    AddResidentToEventCommand -> EventManager: addResidentToEvent(eventName, cca, resident)
+    AddResidentToEventCommand -> Ui: showMessage(...)
+else not found
+    AddResidentToEventCommand -> Ui: showError(...)
+end
+@enduml

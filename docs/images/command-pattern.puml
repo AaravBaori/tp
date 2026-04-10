@@ -1,0 +1,56 @@
+@startuml command-pattern-class
+
+' Optimize for A4 landscape or portrait width
+left to right direction
+skinparam classAttributeIconSize 0
+skinparam defaultFontSize 12
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam linetype ortho
+
+' Styling
+skinparam class {
+    BorderColor #333333
+    BackgroundColor #f9f9f9
+    HeaderBackgroundColor #EEEEEE
+}
+skinparam ArrowColor #333333
+
+abstract class Command <<abstract>> {
+    + {abstract} execute(CM, RM, EM, Ui) : void
+    + isExit() : boolean
+    + isReadOnly() : boolean
+}
+
+' Grouping concrete commands to save vertical space
+package "Concrete Commands" <<Rectangle>> {
+    class AddCcaCommand
+    class DeleteCcaCommand
+    class ViewCcaCommand
+    class AddResidentCommand
+    class DeleteResidentCommand
+    class AddEventCommand
+    class AddResidentToEventCommand
+    class HelpCommand
+    class ExitCommand
+}
+
+' Use solid arrows for inheritance from abstract class
+Command <|-- AddCcaCommand
+Command <|-- DeleteCcaCommand
+Command <|-- ViewCcaCommand
+Command <|-- AddResidentCommand
+Command <|-- DeleteResidentCommand
+Command <|-- AddEventCommand
+Command <|-- AddResidentToEventCommand
+Command <|-- HelpCommand
+Command <|-- ExitCommand
+
+note top of Command
+  All user-facing operations extend Command.
+  Parser creates the appropriate subclass;
+  CcaLedger calls execute(), this is possible
+  because of polymorphism.
+end note
+
+@enduml

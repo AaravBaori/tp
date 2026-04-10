@@ -1,0 +1,47 @@
+@startuml view-my-event
+
+skinparam defaultFontSize 12
+skinparam SequenceArrowThickness 1.2
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+skinparam maxMessageSize 150
+
+title View My Events (Optimized)
+
+actor ":User" as User
+participant "ccaLedger" as CL
+participant "ui" as Ui
+participant "parser" as Parser
+participant "cmd : ViewMyEvents" as Command
+
+box "Logic Layer" #f2f2f2
+    participant "Managers" as MGR
+end box
+
+ref over User, CL, Ui, Parser, Command : SD_CommandExecution
+
+' Logic Flow
+Command -> MGR : viewMyEvents(matric)
+activate MGR
+MGR --> Command : eventList
+deactivate MGR
+
+Command -> MGR : matchingResident(matric)
+activate MGR
+MGR --> Command : resident
+deactivate MGR
+
+' UI Interaction
+Command -> Ui : showMessage("Hi " + name + "...")
+activate Ui
+Ui --> Command
+deactivate Ui
+
+Command -> Ui : showEvents(eventList)
+activate Ui
+Ui --> Command
+deactivate Ui
+
+Command --> CL
+deactivate Command
+
+@enduml

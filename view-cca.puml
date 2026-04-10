@@ -1,0 +1,22 @@
+@startuml
+actor User
+participant Ui
+participant CcaLedger
+participant Parser
+participant ViewCcaCommand
+participant CcaManager
+
+User -> Ui: enter "view-cca"
+Ui -> CcaLedger: input
+
+CcaLedger -> Parser: parse(input)
+Create ViewCcaCommand
+Parser -> ViewCcaCommand: ViewCcaCommand() <<create>>
+
+CcaLedger -> ViewCcaCommand: execute(...)
+
+ViewCcaCommand -> CcaManager: getCCAList()
+CcaManager --> ViewCcaCommand: ccaList
+
+ViewCcaCommand -> Ui: showCcaList(ccaList)
+@enduml

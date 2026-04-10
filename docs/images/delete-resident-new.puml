@@ -1,0 +1,48 @@
+@startuml delete-resident
+
+skinparam defaultFontSize 13
+skinparam SequenceArrowThickness 1.5
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+
+title delete-resident Command
+
+actor ":User" as User
+participant "ccaLedger : CcaLedger" as CcaLedger
+participant "ui : Ui" as Ui
+participant "parser : Parser" as Parser
+participant "command : DeleteResidentCommand" as Command
+participant "residentManager : ResidentManager" as ResidentManager
+
+ref over User, CcaLedger, Ui, Parser, Command
+  SD_CommandExecution
+end ref
+
+Command -> ResidentManager : nameGivenMatricNumber(matricNumber)
+activate ResidentManager
+
+alt Resident not found
+    ResidentManager --> Command : throws ResidentNotFoundException
+    deactivate ResidentManager
+    Command -> Ui : showError(message)
+    activate Ui
+    Ui --> Command
+    deactivate Ui
+else Resident found
+    ResidentManager --> Command : residentName : String
+    deactivate ResidentManager
+
+    Command -> ResidentManager : deleteResident(matricNumber)
+    activate ResidentManager
+    ResidentManager --> Command : (void)
+    deactivate ResidentManager
+
+    Command -> Ui : showMessage("Resident deleted: ...")
+    activate Ui
+    Ui --> Command
+    deactivate Ui
+end
+
+Command --> CcaLedger
+deactivate Command
+
+@enduml

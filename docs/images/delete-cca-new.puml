@@ -1,0 +1,42 @@
+@startuml delete-cca
+
+skinparam defaultFontSize 13
+skinparam SequenceArrowThickness 1.5
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+
+title delete-cca Command
+
+actor ":User" as User
+participant "ccaLedger : CcaLedger" as CcaLedger
+participant "ui : Ui" as Ui
+participant "parser : Parser" as Parser
+participant "command : DeleteCcaCommand" as Command
+participant "ccaManager : CcaManager" as CcaManager
+
+ref over User, CcaLedger, Ui, Parser, Command
+  SD_CommandExecution
+end ref
+
+Command -> CcaManager : deleteCca(ccaName)
+activate CcaManager
+
+alt CCA not found
+    CcaManager --> Command : throws CcaNotFoundException
+    deactivate CcaManager
+    Command -> Ui : showError(message)
+    activate Ui
+    Ui --> Command
+    deactivate Ui
+else CCA exists
+    CcaManager --> Command : (void)
+    deactivate CcaManager
+    Command -> Ui : showMessage("CCA deleted: ...")
+    activate Ui
+    Ui --> Command
+    deactivate Ui
+end
+
+Command --> CcaLedger
+deactivate Command
+
+@enduml

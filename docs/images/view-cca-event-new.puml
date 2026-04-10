@@ -1,0 +1,33 @@
+@startuml view-cca-event
+
+skinparam defaultFontSize 13
+skinparam SequenceArrowThickness 1.5
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+
+title view-cca-event Command
+
+actor ":User" as User
+participant "ccaLedger : CcaLedger" as CcaLedger
+participant "ui : Ui" as Ui
+participant "parser : Parser" as Parser
+participant "command : ViewCcaEvents" as Command
+participant "eventManager : EventManager" as EventManager
+
+ref over User, CcaLedger, Ui, Parser, Command
+  SD_CommandExecution
+end ref
+
+Command -> EventManager : viewCcaEvents(ccaName)
+activate EventManager
+EventManager --> Command : eventList : ArrayList<Event>
+deactivate EventManager
+
+Command -> Ui : viewMatchingCcas(eventList)
+activate Ui
+Ui --> Command
+deactivate Ui
+
+Command --> CcaLedger
+deactivate Command
+
+@enduml

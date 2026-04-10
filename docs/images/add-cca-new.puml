@@ -1,0 +1,42 @@
+@startuml add-cca
+
+skinparam defaultFontSize 13
+skinparam SequenceArrowThickness 1.5
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+
+title add-cca Command
+
+actor ":User" as User
+participant "ccaLedger : CcaLedger" as CcaLedger
+participant "ui : Ui" as Ui
+participant "parser : Parser" as Parser
+participant "command : AddCcaCommand" as Command
+participant "ccaManager : CcaManager" as CcaManager
+
+ref over User, CcaLedger, Ui, Parser, Command
+  SD_CommandExecution
+end ref
+
+Command -> CcaManager : addCCA(ccaName, ccaLevel)
+activate CcaManager
+
+alt CCA already exists
+    CcaManager --> Command : throws DuplicateCcaException
+    deactivate CcaManager
+    Command -> Ui : showError(message)
+    activate Ui
+    Ui --> Command
+    deactivate Ui
+else CCA is new
+    CcaManager --> Command : (void)
+    deactivate CcaManager
+    Command -> Ui : showMessage("CCA added: ...")
+    activate Ui
+    Ui --> Command
+    deactivate Ui
+end
+
+Command --> CcaLedger
+deactivate Command
+
+@enduml

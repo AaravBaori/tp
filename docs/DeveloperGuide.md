@@ -80,9 +80,11 @@ Follow the steps below to set up and run the application:
 
 ## Overall Architecture
 
-CcaLedger follows a **layered, command-driven architecture**. Each layer has a single responsibility and communicates only with its immediate neighbours.
+CcaLedger follows a layered, command-driven architecture built around the **Command Pattern**.
+In the Command Pattern, each user action (e.g. `add-cca`, `delete-resident`) is encapsulated as a self-contained `Command` object with a single `execute()` method. The `Parser` is responsible for creating the correct `Command` subclass from raw user input.`CcaLedger` then simply calls `execute()` on whatever command it receives — without needing to know which specific operation is being performed. This keeps the orchestration layer thin and makes adding new commands straightforward: create a new subclass, register it in the Parser, and nothing else changes.
+Each layer has a single responsibility and communicates only with its immediate neighbours.
 
-![highLevel-architecture.png](images/highLevel-architecture.png)
+![highLevel_architecture.png](images/highLevel_architecture.png)
 
 The diagram above shows the six layers and their relationships. The table below summarises each layer's role.
 
@@ -95,13 +97,30 @@ The diagram above shows the six layers and their relationships. The table below 
 | Managers      | `CcaManager`, `ResidentManager`, `EventManager` | Holds and mutates application state.                          |
 | Domain Model  | `Cca`, `Resident`, `Event`, `CcaLevel`          | Plain data objects with no business logic.                    |
 
-**How a command executes (happy path):**
 
+
+### Command Pattern
+![command_pattern.png](images/command_pattern.png)
+
+Class diagram showing the **Command Pattern**. `Parser` instantiates the correct
+`Command` subclass; `CcaLedger` calls `execute()` without knowing  the concrete type. All subsequent command sections implement this pattern and will reference this diagram.
+
+**How a command executes (happy path) (refer to Command Pattern class diagram above):**
 1. `Ui.readInput()` reads a line from the user.
 2. `Parser.parse(input)` inspects the string and returns the appropriate `Command` subclass.
 3. `CcaLedger` calls `command.execute(ccaManager, residentManager, eventManager, ui)`.
 4. The command calls the relevant manager method(s) and prints feedback via `Ui`.
 5. If `command.isExit()` returns `true`, the loop terminates.
+
+
+### Reference: Common Command Execution Flow
+
+All commands in this document share the same top-level execution flow — user input is read,
+parsed into a `Command` object, and `execute()` is called by `CcaLedger`. This is captured
+once in the diagram below and referenced by all subsequent sequence diagrams to avoid repetition.
+
+![SD_CommandExecution](images/SD_CommandExecution-SD.png)
+
 
 **Key design rules:**
 - Domain objects (`Cca`, `Resident`, `Event`) have no outward dependencies.
@@ -111,6 +130,38 @@ The diagram above shows the six layers and their relationships. The table below 
 
 ---
 
+### Domain Model
+
+The Domain Model layer contains plain data objects with no outward dependencies.
+All state is owned and mutated by the Manager layer above.
+
+![domain_model.png](images/domain_model.png)
+
+*Class diagram of the Domain Model layer. These are plain data objects with no
+dependencies on any other layer. All business logic and state changes is
+sent upward to the Manager layer.*
+
+### Managers
+
+The Managers layer holds and mutates application state. Each manager owns one
+type of domain object and exposes methods for creating, retrieving, and deleting them.
+
+![managers.png](images/managers.png)
+
+
+*Class diagram of the Managers layer. Each manager owns and mutates its respective
+domain objects. Managers have no knowledge of the UI, Parser, or Command layers.*
+
+### UI and Parsing
+The UI and Parsing layer handles all console I/O and translates raw user input into
+Command objects. `Ui` is the only class that writes to the console.
+
+![ui_parsing.png](images/ui_parsing.png)
+*Class diagram of the UI and Parsing layer. `Parser` is the sole factory for
+`Command` objects. `Ui` handles all console output and has no outward dependencies
+beyond the domain model objects it displays.*
+
+---
 ## CCA Commands
 
 ### Add CCA Command
@@ -132,25 +183,17 @@ The `add-cca` command is implemented using the Command pattern.
 - `AddCcaCommand.execute()` calls `CcaManager.addCCA(...)`.
 - If the CCA already exists, a `DuplicateCcaException` is thrown and handled.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-   try {
-      ccaManager.addCCA(ccaName, ccaLevel);
-      ui.showMessage("CCA added: " + ccaName + "(" + ccaLevel + ")");
-   } catch (DuplicateCcaException | InvalidCcaLevelException e) {
-      ui.showError(e.getMessage());
-   }
-}
-```
+
 
 #### Sequence Diagram
-![Add CCA Sequence Diagram](images/add-cca.png)
+![Add CCA Sequence Diagram](images/add-cca-new.png)
 
 #### Design Considerations
 
-- Command pattern is used to separate parsing and execution.
-- Exception handling is used to manage duplicate CCA cases cleanly
+
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
+Duplicate CCA detection is handled inside `CcaManager`, keeping business logic centralised and
+the command layer thin.
 
 #### Alternatives Considered
 1. Direct Invocation from Parser to Manager
@@ -181,16 +224,9 @@ The `view-cca` command retrieves and displays all CCAs.
 - `ViewCcaCommand.execute()` calls `CcaManager.getCCAList()`.
 - The retrieved list is passed to `Ui.showCcaList(...)` for display.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
-    ArrayList<Cca> ccaList = ccaManager.getCCAList();
-    ui.showCcaList(ccaList);
-}
-```
 
 #### Sequence Diagram
-![Add CCA Sequence Diagram](images/view-cca.png)
+![Add CCA Sequence Diagram](images/view-cca-new.png)
 
 ---
 
@@ -212,26 +248,17 @@ The `delete-cca` command is implemented using the Command pattern.
 - The `Parser` creates a `DeleteCcaCommand` object from user input.
 - `DeleteCcaCommand.execute()` calls `CcaManager.deleteCca(...)`.
 - If the CCA does not exist, a `CcaNotFoundException` is thrown and handled.
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
-    try {
-        ccaManager.deleteCca(ccaName);
-        ui.showMessage("CCA deleted: " + ccaName);
-    } catch (CcaNotFoundException e) {
-        ui.showMessage(e.getMessage());
-    }
-}
-```
+
 
 #### Sequence Diagram
-![delete-cca.png](images/delete-cca.png)
+![delete-cca.png](images/delete-cca-new.png)
+
 
 #### Design Considerations
 
-- Command pattern is used to separate parsing and execution.
-- Exception handling is used to manage non-existent CCA cases cleanly.
-
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
+The non-existence check is handled by `CcaManager`, which throws `CcaNotFoundException` —
+the command only handles display of the resulting error.
 #### Alternatives Considered
 1. Direct Invocation from Parser to Manager  
    Approach: Parser directly calls `CcaManager.deleteCca(...)`  
@@ -261,34 +288,11 @@ Format:
 - The `Resident` is added to the Cca as an EXCO in the `excoResidents` arraylist.
 - Exceptions are thrown if the resident or CCA does not exist.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-   try {
-      Cca cca = ccaManager.getCCAList().stream()
-              .filter(x -> x.getName().equals(ccaName))
-              .findFirst()
-              .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
-   
-      Resident resident = residentManager.getResidentList().stream()
-              .filter(x -> x.getMatricNumber().equals(matriculationNo))
-              .findFirst()
-              .orElseThrow(() -> new ResidentNotFoundException(matriculationNo + " not found."));
-   
-      cca.addExcoToCca(resident);
-      resident.addCcaToResident(cca);
-   
-      ui.showMessage("Resident " + resident + " was added as an EXCO to CCA: " + cca.getName());
-   
-   } catch (CcaNotFoundException | ResidentNotFoundException | ResidentAlreadyInCcaException e) {
-      ui.showError(e.getMessage());
-   }
-}
-```
+
 
 #### Sequence Diagram
 
-![add-exco-to-cca.png](images/add-exco-to-cca.png)
+![add-exco-to-cca.png](images/add_exco_to_cca-new.png)
 
 ---
 
@@ -308,24 +312,11 @@ Format:
 - If no it throws a `CcaNotFoundException`.
 - If yes, then is displays the `excoMembers` of a `Cca`
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-   try {
-      Cca cca = ccaManager.getCCAList().stream()
-              .filter(x -> x.getName().equals(ccaName))
-              .findFirst()
-              .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
-      ui.showExcoList(cca.getExcos());
-   } catch (CcaNotFoundException e) {
-      ui.showError(e.getMessage());
-   }
-}
-```
+
 
 #### Sequence Diagram
 
-![view-exco.png](images/view-exco.png)
+![view-exco.png](images/view-exco-new.png)
 
 ---
 
@@ -348,23 +339,10 @@ Format:
 - `CcaStatsCommand.mostActiveResidents()` finds the most active member of each CCA by taking the resident with the most points for that CCA.
 - If there are no CCAs in the first place, `CcaStatsCommand.execute()` passes a message to the user through `Ui.showMessage()`. Otherwise, it passes the above information to `Ui.showCcaStats()` for display.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-   ArrayList<Cca> ccas = ccaManager.getCCAList();
-   try {
-      HashMap<Cca, Double> avgPoints = avgPoints(ccas);
-      Cca mostPopularCca = mostPopularCca(avgPoints);
-      HashMap<Cca, Resident> mostActiveResidents = mostActiveResidents(ccas);
-      ui.showCcaStats(avgPoints, mostPopularCca, mostActiveResidents);
-   } catch (IllegalArgumentException e) {
-      ui.showMessage("There are no CCAs currently. Please add CCAs using add-cca command");
-   }
-}
-```
+
 
 #### Sequence Diagram
-![Add CCA Statistics Sequence Diagram](images/cca-stats.png)
+![Add CCA Statistics Sequence Diagram](images/cca_stats-new.png)
 
 ---
 
@@ -389,26 +367,15 @@ The `add-resident` command is implemented using the Command pattern.
 - `AddResidentCommand.execute()` calls `ResidentManager.addResident(...)`.
 - If a resident with the same matric number already exists, a `DuplicateResidentException` is thrown and handled.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-   try {
-      residentManager.addResident(residentName, matricNumber);
-      ui.showMessage("Resident added: " + residentName + " " + matricNumber);
-   } catch (DuplicateResidentException e) {
-      ui.showError(e.getMessage());
-   }
-}
-```
-
 #### Sequence Diagram
 
-![add-resident.png](images/add-resident.png)
+![add-resident.png](images/add-resident-add-new.png)
 
 #### Design Considerations
-- Command pattern separates parsing and execution.
-- Duplicate validation is handled inside ResidentManager, keeping business logic centralized.
 
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
+Duplicate resident detection is handled inside `ResidentManager` using the matric number as a
+unique identifier, keeping validation logic centralised in the manager layer.
 ---
 
 ### View Resident Command
@@ -430,16 +397,10 @@ The `view-resident` command retrieves and displays all residents.
 - `ViewResidentCommand.execute()` calls `ResidentManager.getResidentList()`.
 - The retrieved list is passed to `Ui.showResidentList(...)` for display.
 
-```java
-@Override
- public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
-     ArrayList<Resident> residentList = residentManager.getResidentList();
-     ui.showResidentList(residentList);
- }
-```
+
 
 #### Sequence Diagram
-![Add View Resident Sequence Diagram](images/view-resident.png)
+![Add View Resident Sequence Diagram](images/view-resident-new.png)
 
 ---
 
@@ -463,27 +424,17 @@ The `Parser` creates a `DeleteResidentCommand`.
 It then calls `ResidentManager.deleteResident(...)`.
 If the resident does not exist, a ResidentNotFoundException is thrown and handled.
 
-@Override
-```java
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-   try {
-      String residentName = residentManager.nameGivenMatricNumber(matricNumber);
-      residentManager.deleteResident(matricNumber);
-      ui.showMessage("Resident deleted: " + residentName);
-   } catch (ResidentNotFoundException e) {
-      ui.showMessage(e.getMessage());
-   }
-}
-```
+
 
 #### Sequence Diagram
 
-![delete-resident.png](images/delete-resident.png)
+![delete-resident.png](images/delete-resident-new.png)
 
 #### Design Considerations
-- Delegates deletion logic fully to ResidentManager.
-- Retrieves resident name before deletion for better user feedback.
 
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
+The resident's name is retrieved before deletion to provide meaningful feedback to the user,
+since the name would no longer be accessible after the delete operation completes.
 ---
 
 ### Add Resident to CCA Command
@@ -505,37 +456,15 @@ Format:
 - The `Resident` is added to the Cca using `Cca.addResidentToCca(...)`.
 - Exceptions are thrown if the resident or CCA does not exist.
 
-```java
-@Override
- public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-     try {
-         Cca cca = ccaManager.getCCAList().stream()
-                 .filter(x -> x.getName().equals(ccaName))
-                 .findFirst()
-                 .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
-
-         Resident resident = residentManager.getResidentList().stream()
-                 .filter(x -> x.getMatricNumber().equals(matriculationNo))
-                 .findFirst()
-                 .orElseThrow(() -> new ResidentNotFoundException(matriculationNo + " not found."));
-
-         cca.addResidentToCca(resident);
-         resident.addCcaToResident(cca, pointsScored);
-
-         ui.showMessage("Resident " + resident + " was added to CCA: " + cca.getName() +
-                 " with " + pointsScored + " points.");
-
-     } catch (CcaNotFoundException | ResidentNotFoundException | ResidentAlreadyInCcaException e) {
-         ui.showError(e.getMessage());
-     }
- }
-```
 
 #### Sequence Diagram
 
-![add-resident-to-cca.png](images/add-resident-to-cca.png)
+![add-resident-to-cca.png](images/add_resident_to_cca-new.png)
 
 ---
+#### Design Considerations
+
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
 
 ### View Points Command
 
@@ -555,24 +484,16 @@ The view-points command retrieves and displays CCA points for all residents.
 - The Parser creates a ViewPointsCommand object.
 - ViewPointsCommand.execute() calls ResidentManager.getResidentList().
 - The retrieved list is passed to Ui.showCcaPoints(...) for display.
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, Ui ui) {
-ArrayList<Resident> residentList = residentManager.getResidentList();
-ui.showCcaPoints(residentList);
-}
-```
+
 
 #### Sequence Diagram
 
-![view-points.png](images/view-points.png)
+![view-points.png](images/view-points-new.png)
 
 #### Design Considerations
 
-- Command pattern is used to separate parsing and execution.
-- Reuses ResidentManager.getResidentList() to retrieve resident data, keeping the manager layer lean.
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
 
----
 
 ### Resident Statistics Command
 
@@ -592,24 +513,15 @@ Format:
 - `ResdientStatsCommand.mostActiveResidents()` finds the most active residents across all CCAs based on their total points.
 - If there are no residents in the first place, `ResidentStatsCommand.execute()`passes a message to the user through `Ui.showMessage()`. Otherwise, it passes the above information to `Ui.showResidentStats()` for display.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-   ArrayList<Resident> residents = residentManager.getResidentList();
-   try {
-      HashMap<Resident, Integer> totalPoints = totalPoints(residents);
-      ArrayList<Resident> mostActiveResident = mostActiveResidents(totalPoints);
-      ui.showResidentStats(totalPoints, mostActiveResident);
-   } catch (IllegalArgumentException e) {
-      ui.showMessage("There are no residents currently. Please add residents using add-resident command");
-   }
-}
-```
+
 
 #### Sequence Diagram
-![Add Resident Statistics Sequence Diagram](images/resident-stats.png)
+![Add Resident Statistics Sequence Diagram](images/resident-stats-new.png)
 
 ---
+#### Design Considerations
+
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
 
 ## Event Commands
 
@@ -633,28 +545,17 @@ The `add-event` command is implemented using the Command pattern.
 - The event is added using `EventManager.addEvent(...)`.
 - If the CCA does not exist, a `CcaNotFoundException` is thrown and handled.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-   try {
-      Cca cca = ccaManager.getCCAList().stream()
-              .filter(x -> x.getName().equals(ccaName))
-              .findFirst()
-              .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
-
-      eventManager.addEvent(eventName, cca, dateTime);
-
-      ui.showMessage("Event added: " + eventName + " for the CCA " + ccaName + ", during " + dateTime);
-
-   } catch (CcaNotFoundException e) {
-      ui.showError(e.getMessage());
-   }
-}
-```
 
 #### Sequence Diagram
-![add-event.png](images/add-event.png)
+![add-event.png](images/add-event-new.png)
 
+
+#### Design Considerations
+
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
+The CCA lookup is performed inside the command before delegating to `EventManager`, ensuring
+that events are never created under a non-existent CCA. `EventManager` itself remains
+unaware of `CcaManager`, preserving the separation between managers.
 ---
 
 ### Add Resident to Event Command
@@ -678,35 +579,22 @@ The command is implemented using the Command pattern.
 - The resident is added to the event using `EventManager.addResidentToEvent(...)`.
 - Exceptions are thrown if the resident, CCA, or event does not exist.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-   try {
-      Resident resident = residentManager.getResidentList().stream()
-              .filter(r -> r.getMatricNumber().equalsIgnoreCase(matricNumber))
-              .findFirst()
-              .orElseThrow(() -> new ResidentNotFoundException(...));
 
-      Cca cca = ccaManager.getCCAList().stream()
-              .filter(c -> c.getName().equalsIgnoreCase(ccaName))
-              .findFirst()
-              .orElseThrow(() -> new CcaNotFoundException(...));
-
-      eventManager.addResidentToEvent(eventName, cca, resident);
-
-      ui.showMessage(...);
-
-   } catch (ResidentNotFoundException | CcaNotFoundException | EventNotFoundException e) {
-      ui.showError(e.getMessage());
-   }
-}
-```
 
 #### Sequence Diagram
 
-![add-resident-to-event.png](images/add-resident-to-event.png)
+![add-resident-to-event.png](images/add-resident-to-event-new.png)
 
 ---
+
+#### Design Considerations
+
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
+This command is the most compositional in the system — it coordinates all three managers.
+The resident and CCA lookups are resolved first in the command layer before delegating
+the event lookup to `EventManager`, ensuring each manager only handles its own domain.
+Note that `EventNotFoundException` sits outside the `CcaLedgerException` hierarchy by design
+— see the [Exception Handling](#exception-handling) section for details.
 
 ### View My Events Command
 
@@ -725,18 +613,14 @@ The `view-my-event` command retrieves and displays all events associated with a 
 
 The `Parser` creates a `ViewMyEvents` object from user input. `ViewMyEvents.execute()` calls `EventManager.viewMyEvents(matricNumber)` to retrieve the matching events. It then retrieves the resident using `ResidentManager.matchingResident(...)`, prints a greeting using the resident's name, and passes the event list to `Ui.viewMyCcas(...)` for display.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-    ArrayList<Event> ccaEvents = eventManager.viewMyEvents(matricNumber);
-    Resident resident = residentManager.matchingResident(matricNumber);
-    System.out.println("Hi " + resident.getName() + ", here are your events: ");
-    ui.viewMyCcas(ccaEvents);
-}
-```
+
 
 #### Sequence Diagram
-![view-my-events.png](images/view-my-events.png)
+![view-my-events.png](images/view-my-event-new.png)
+
+#### Design Considerations
+
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
 
 ---
 
@@ -757,18 +641,15 @@ The `view-cca-event` command retrieves and displays all events belonging to a sp
 
 The `Parser` creates a `ViewCcaEvents` object from user input. `ViewCcaEvents.execute()` calls `EventManager.viewCcaEvents(ccaName)` to retrieve the matching events, and the resulting list is passed to `Ui.viewMatchingCcas(...)` for display.
 
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui){
-    ArrayList<Event> ccaEvents = eventManager.viewCcaEvents(ccaName);
-    ui.viewMatchingCcas(ccaEvents);
-}
-```
+
 
 #### Sequence Diagram
-![view-cca-events.png](images/view-cca-events.png)
+![view-cca-events.png](images/view_cca_event-new.png)
 
 ---
+#### Design Considerations
+
+This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
 
 ## General Commands
 
@@ -781,33 +662,11 @@ Format:
 `help`
 
 #### Implementation
-The `help` command is implemented using the Command pattern.
 
-- The `Parser` creates a `HelpCommand` object from user input.
-- `HelpCommand.execute()` creates a string which is a list of all commands and their usage.
-- It then passes the string to `Ui.showMessage()`.
-
-```java
-@Override
- public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-    String help = "Here is a list of all commands:\n" +
-            "> add-cca <cca name> <level (HIGH, MEDIUM, LOW or UNKNOWN)>\n" +
-            "> view-cca\n" +
-            "> delete-cca <cca name>\n" +
-            "> add-event <event name> <cca name> <data time>\n" +
-            "> add-resident <name> <matric number>\n" +
-            "> view-resident\n" +
-            "> add-resident-to-cca <matric number> <cca name> <points>\n" +
-            "> add-resident-to-event <matric number> <event name> <cca name>\n" +
-            "> view-points\n" +
-            "> cca-stats\n" +
-            "> resident-stats\n" +
-            "> help\n" +
-            "> bye";
-    ui.showMessage(help);
-}
- ```
-
+> The `help` command requires no manager interaction. It constructs a static help string
+> and passes it directly to `Ui.showMessage()`. No sequence diagram is provided as the
+> flow is fully captured by the
+> [common execution reference](#reference-common-command-execution-flow).
 
 # Appendices
 
@@ -1033,23 +892,9 @@ public class CcaLedgerException extends Exception {
 ---
 
 ### Design Considerations
-Using a shared `CcaLedgerException` base allows commands to write clean catch blocks. A command that calls into multiple managers (like `AddResidentToEventCommand`) can catch all recoverable domain errors in a single multi-catch clause, rather than needing separate handlers for each type:
-```java
-@Override
-public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-    try {
-        // ... command logic
-    } catch (ResidentNotFoundException | CcaNotFoundException | EventNotFoundException e) {
-        ui.showError(e.getMessage());
-    }
-}
-```
 
-All exception classes are minimal by design — they only call `super(message)` and carry no additional state. Error context is passed entirely through the message string, which keeps the domain model lean and the `Ui` layer solely responsible for display.
+This command follows the Command Pattern described in the Architecture section. Parsing and execution are fully separated; the command stores no state and receives all dependencies through `execute()`.
 
----
-
----
 
 ### Input Validation vs. Exception Handling
 

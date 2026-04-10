@@ -1,0 +1,33 @@
+@startuml view-points
+
+skinparam defaultFontSize 13
+skinparam SequenceArrowThickness 1.5
+skinparam SequenceParticipantBackgroundColor #f9f9f9
+
+title view-points Command
+
+actor ":User" as User
+participant "ccaLedger : CcaLedger" as CcaLedger
+participant "ui : Ui" as Ui
+participant "parser : Parser" as Parser
+participant "command : ViewPointsCommand" as Command
+participant "residentManager : ResidentManager" as ResidentManager
+
+ref over User, CcaLedger, Ui, Parser, Command
+  SD_CommandExecution
+end ref
+
+Command -> ResidentManager : getResidentList()
+activate ResidentManager
+ResidentManager --> Command : residentList : ArrayList<Resident>
+deactivate ResidentManager
+
+Command -> Ui : showCcaPoints(residentList)
+activate Ui
+Ui --> Command
+deactivate Ui
+
+Command --> CcaLedger
+deactivate Command
+
+@enduml
