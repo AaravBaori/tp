@@ -5,6 +5,7 @@ import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
 import ccamanager.ui.Ui;
 import ccamanager.model.Event;
+import ccamanager.model.Cca;
 import java.util.ArrayList;
 
 /**
@@ -20,11 +21,19 @@ public class ViewCcaEvents extends Command{
     public String getCcaName(){
         return ccaName;
     }
-    public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui){
-        ArrayList <Event> ccaEvents = eventManager.viewCcaEvents(ccaName);
-        ui.viewMatchingCcas(ccaEvents);
+    public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
+        Cca matchingCca = ccaManager.findByName(ccaName);
+        if (matchingCca == null) {
+            ui.showMessage("There is no matching CCA named " + ccaName);
+        } else {
+            ArrayList<Event> ccaEvents = eventManager.viewCcaEvents(ccaName);
+            if (ccaEvents.isEmpty()) {
+                ui.showMessage("There is no event for your CCA");
+            } else {
+                ui.viewMatchingCcas(ccaEvents);
+            }
+        }
     }
-
     @Override
     public boolean isReadOnly() {
         return true;
