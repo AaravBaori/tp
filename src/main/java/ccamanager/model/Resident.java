@@ -90,6 +90,18 @@ public class Resident {
         return map;
     }
 
+    /**
+     * Returns an integer that is the sum of all points the resident have
+     * @return aan integer that is the sum of all points the resident have
+     */
+    public int getTotalPoints() {
+        int totalPoints=0;
+        for(int i=0;i<ccaRegisteredIn.size();i++){
+            totalPoints+= points.get(i);
+        }
+        return  totalPoints;
+    }
+
     @Override
     public String toString() {
         return name + " | " + matricNumber;

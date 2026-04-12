@@ -135,9 +135,20 @@ public class Ui {
                 Resident resident = residentList.get(i-1);
                 ArrayList<Cca> residentCcas= resident.getCcas();
                 ArrayList<Integer> residentPoints = resident.getPoints();
-                System.out.println(i + ". " + resident );
-                for(int j = 0; j<residentCcas.size();j++){
-                    System.out.println(residentCcas.get(j)+" "+residentPoints.get(j));
+
+                if(residentCcas.isEmpty()){
+                    System.out.println(i + ". " + resident + ": 0 point");
+                    System.out.println(DIVIDER);
+                }else {
+                    int totalPoints = resident.getTotalPoints();
+                    System.out.println(i + ". " + resident + ": " +totalPoints +" points");
+                    System.out.println(DIVIDER);
+                    System.out.println("Here is the breakdown:");
+
+                    for (int j = 0; j < residentCcas.size(); j++) {
+                        System.out.println(residentCcas.get(j).getName() + " " + residentPoints.get(j));
+                    }
+                    System.out.println(DIVIDER);
                 }
             }
         }
