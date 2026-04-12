@@ -23,7 +23,7 @@ public class ViewMyEvents extends Command {
         ArrayList<Event> ccaEvents = eventManager.viewMyEvents(matricNumber);
         Resident resident = residentManager.matchingResident(matricNumber);
         if (resident == null) {
-            ui.showMessage("You are not registered as resident!");
+            ui.showMessage("You("+matricNumber+") are not registered as resident!");
         } else {
             if (ccaEvents.isEmpty()) {
                 ui.showMessage("There is no event for you!");
