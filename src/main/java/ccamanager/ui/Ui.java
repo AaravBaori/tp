@@ -167,8 +167,14 @@ public class Ui {
         System.out.println("Average points and most active resident per CCA:");
         int index = 1;
         for (Cca cca : avgPoints.keySet()) {
-            System.out.println(index + ". " + cca + ", average points: " + avgPoints.get(cca) + ", most active: " +
-                    mostActiveResidents.get(cca));
+            Resident mostActiveResident = mostActiveResidents.get(cca);
+            if (mostActiveResident == null) {
+                System.out.println(index + ". " + cca + ", average points: " + avgPoints.get(cca) + ", most active: " +
+                        "N/A");
+            } else {
+                System.out.println(index + ". " + cca + ", average points: " + avgPoints.get(cca) + ", most active: " +
+                        mostActiveResident);
+            }
             index++;
         }
         System.out.println();

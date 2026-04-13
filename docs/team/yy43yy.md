@@ -28,13 +28,18 @@ CCAManager is a CLI-based application designed for Hall Leaders to manage Reside
 * **Logic:** Integrated resident and event information to retrieve the correct list of events linked to a resident.
 * **User-Centric Design:** Presented the information in a straightforward and personalized format for easier interpretation.
 
-### 5. Sort Points Feature
-* **Functional Implementation:** Implemented the `SortPointsCommand` to sort residents according to their total CCA points.
-* **Sorting Logic:** Used Java’s sorting utilities and `Comparator` to order residents in descending order of total points.
-* **Usability Improvement:** Improved the usefulness of the application by allowing hall leaders to identify high-performing residents more efficiently.
+### 5. Update Points Feature
+* **Functional Implementation:** Implemented the `UpdateCcaPointCommand` to allow users to update the number of points a resident has for a specific CCA.
+* **Validation Logic:** Ensured that input points are non-negative and that both the resident and CCA exist before performing the update.
+* **Encapsulation:** Delegated point update logic to the `Resident.updatePoint(...)` method to maintain data consistency and proper separation of concerns.
 
 
-### 6. Testing & Quality Assurance
+### 6. Sort Points Feature
+* **Functional Implementation:** Implemented the `SortPointsCommand` to sort residents based on their total CCA points.
+* **Sorting Logic:** Used Java’s `Comparator` to arrange residents in descending order of total points.
+* **Usability Improvement:** Enabled Hall Leaders to quickly identify top-performing residents through a sorted view of points.
+
+### 7. Testing & Quality Assurance
 * **Unit Testing:** Wrote JUnit tests for `DeleteResidentCommand`, `ViewPointsCommand`, `ViewCcaEventsCommand`, and `ViewMyEventsCommand`.
 * **Edge Case Coverage:** Tested scenarios such as empty lists, invalid inputs, and non-existent records to ensure robustness.
 * **Quality Assurance:** Verified that implemented features behaved correctly and consistently with the project requirements.
@@ -47,9 +52,10 @@ CCAManager is a CLI-based application designed for Hall Leaders to manage Reside
 * Wrote instructions for **View CCA Events** (`view-cca-events`).
 * Wrote instructions for **View My Events** (`view-my-events`).
 * Wrote instructions for **Sort Points** (`sort-points`).
+* * Wrote instructions for **Sort Points** (`edit-points`).
 
 ## Contributions to the Developer Guide
-* Documented the implementation details for `DeleteResidentCommand`, `ViewPointsCommand`, `ViewCcaEventsCommand`, `ViewMyEventsCommand`, and `SortPointsCommand`.
+* Documented the implementation details for `DeleteResidentCommand`, `ViewPointsCommand`, `ViewCcaEventsCommand`, `UpdateCcaPointCommand`, `ViewMyEventsCommand`, and `SortPointsCommand`.
 * Contributed explanations of the logic and design considerations behind resident point viewing and event viewing features.
 * Helped document command execution behavior and feature interactions within the application.
 
