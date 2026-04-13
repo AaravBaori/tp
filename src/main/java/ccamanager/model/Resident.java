@@ -44,8 +44,7 @@ public class Resident {
      * @param cca CCA to add residents in
      */
     public void addCcaToResident(Cca cca) {
-        ccaRegisteredIn.add(cca);
-        points.add(0);
+        addCcaToResident(cca, 0);
     }
 
     /**
@@ -58,6 +57,13 @@ public class Resident {
         assert pointsEarned >= 0 : "Points earned should be non-negative";
         assert ccaRegisteredIn != null : "CCA list should be initialized";
         assert points != null : "Points list should be initialized";
+
+        for (int i = 0; i < ccaRegisteredIn.size(); i++) {
+            if (ccaRegisteredIn.get(i).getName().equalsIgnoreCase(cca.getName())) {
+                points.set(i, pointsEarned);
+                return;
+            }
+        }
 
         ccaRegisteredIn.add(cca);
         points.add(pointsEarned);

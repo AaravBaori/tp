@@ -51,33 +51,16 @@ public class Parser {
         String trimmedInput = input.trim();
         int firstSpace = trimmedInput.indexOf(" ");
 
-        // Handle single-word commands (no arguments)
-        if (firstSpace == -1) {
-            String commandWord = trimmedInput.toLowerCase();
-            switch (commandWord) {
-            case "help":
-                return new HelpCommand();
-            case "bye":
-                return new ExitCommand();
-            case "view-cca":
-                return new ViewCcaCommand();
-            case "view-resident":
-                return new ViewResidentCommand();
-            case "view-points":
-                return new ViewPointsCommand();
-            case "cca-stats":
-                return new CcaStatsCommand();
-            case "resident-stats":
-                return new ResidentStatsCommand();
-            case "sort-points":
-                return new SortPointsCommand();
-            default:
-                return new UnknownCommand();
-            }
-        }
+        String commandWord;
+        String rawArgs;
 
-        String commandWord = trimmedInput.substring(0, firstSpace).toLowerCase();
-        String rawArgs = trimmedInput.substring(firstSpace + 1).trim();
+        if (firstSpace == -1) {
+            commandWord = trimmedInput.toLowerCase();
+            rawArgs = "";
+        } else {
+            commandWord = trimmedInput.substring(0, firstSpace).toLowerCase();
+            rawArgs = trimmedInput.substring(firstSpace + 1).trim();
+        }
 
         String[] args = rawArgs.split(";");
 
@@ -88,6 +71,23 @@ public class Parser {
         assert args.length > 0 : "Non-blank input should produce at least one token";
 
         switch (commandWord) {
+        case "help":
+            return new HelpCommand();
+        case "bye":
+            return new ExitCommand();
+        case "view-cca":
+            return new ViewCcaCommand();
+        case "view-resident":
+            return new ViewResidentCommand();
+        case "view-points":
+            return new ViewPointsCommand();
+        case "cca-stats":
+            return new CcaStatsCommand();
+        case "resident-stats":
+            return new ResidentStatsCommand();
+        case "sort-points":
+            return new SortPointsCommand();
+
         case "add-cca":
             if (args.length < 2 || args[0].isBlank() || args[1].isBlank()) {
                 return new UnknownCommand("Usage: add-cca <cca name>; <level>");
@@ -168,7 +168,7 @@ public class Parser {
 
         case "add-exco-to-cca":
             if (args.length < 3) {
-                return new UnknownCommand("Usage: add-exco-to-cca <matric number>; <cca name>");
+                return new UnknownCommand("Usage: add-exco-to-cca <matric number>; <cca name>; <points>");
             }
             if (args[0].isBlank()) {
                 return new UnknownCommand("Matric number cannot be empty.");
@@ -192,9 +192,10 @@ public class Parser {
                 return new UnknownCommand("Resident matric number cannot be empty.");
             }
             return new ViewMyEvents(args[0]);
+
         case "update-point":
             if (args.length < 3) {
-                return new UnknownCommand("Usage: add-resident-to-event <matric>; <event>; <cca>");
+                return new UnknownCommand("Usage: update-point <matric>; <cca>; <points>");
             }
             if (args[0].isBlank()) {
                 return new UnknownCommand("Matric number cannot be empty");
@@ -206,22 +207,9 @@ public class Parser {
                 return new UnknownCommand("Point cannot be empty.");
             }
             return new UpdateCcaPointCommand(args[0],args[1],args[2]);
-        default:
-            // This captures cases like "help" (if not caught above) or completely unknown words
-            return parseSingleWordFallback(commandWord);
-        }
-    }
 
-    private Command parseSingleWordFallback(String commandWord) {
-        switch (commandWord) {
-        case "help": return new HelpCommand();
-        case "bye": return new ExitCommand();
-        case "view-cca": return new ViewCcaCommand();
-        case "view-resident": return new ViewResidentCommand();
-        case "view-points": return new ViewPointsCommand();
-        case "cca-stats": return new CcaStatsCommand();
-        case "resident-stats": return new ResidentStatsCommand();
-        default: return new UnknownCommand();
+        default:
+            return new UnknownCommand();
         }
     }
 
