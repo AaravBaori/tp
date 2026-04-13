@@ -276,7 +276,7 @@ the command only handles display of the resulting error.
 The `add-exco-to-cca` command adds an existing resident as an EXCO for the Cca.
 
 Format:
-`add-exco-to-cca <matric number>; <cca name>`
+`add-exco-to-cca <unique identifier>; <cca name>`
 
 ---
 
@@ -355,7 +355,7 @@ Format:
 The `add-resident` command adds a new resident to the system.
 
 Format:  
-`add-resident <resident name>; <matric number>`
+`add-resident <resident name>; <unique identifier>`
 
 ---
 
@@ -365,7 +365,7 @@ The `add-resident` command is implemented using the Command pattern.
 
 - The `Parser` creates an `AddResidentCommand` object from user input.
 - `AddResidentCommand.execute()` calls `ResidentManager.addResident(...)`.
-- If a resident with the same matric number already exists, a `DuplicateResidentException` is thrown and handled.
+- If a resident with the same identifier already exists, a `DuplicateResidentException` is thrown and handled.
 
 #### Sequence Diagram
 
@@ -374,8 +374,8 @@ The `add-resident` command is implemented using the Command pattern.
 #### Design Considerations
 
 This command follows the Command Pattern described in the [Architecture section](#overall-architecture).
-Duplicate resident detection is handled inside `ResidentManager` using the matric number as a
-unique identifier, keeping validation logic centralised in the manager layer.
+Duplicate resident detection is handled inside `ResidentManager` using the unique identifier, 
+keeping validation logic centralised in the manager layer.
 ---
 
 ### View Resident Command
@@ -411,7 +411,7 @@ The `view-resident` command retrieves and displays all residents.
 The `delete-resident` command removes an existing resident from the system.
 
 Format:
-`delete-resident <matric number>`
+`delete-resident <unique identifier>`
 
 ---
 
@@ -444,7 +444,7 @@ since the name would no longer be accessible after the delete operation complete
 The `add-resident-to-cca` command adds an existing resident to a CCA.
 
 Format:
-`add-resident-to-cca <matric number>; <cca name> <points>`
+`add-resident-to-cca <unique identifier>; <cca name> <points>`
 
 ---
 
@@ -530,7 +530,7 @@ This command follows the Command Pattern described in the [Architecture section]
 The `update-point` command updates the points of a resident for a specified CCA.
 
 Format:  
-`update-point <matric number> <cca name> <points>`
+`update-point <unique identifier> <cca name> <points>`
 
 ---
 
@@ -626,7 +626,7 @@ unaware of `CcaManager`, preserving the separation between managers.
 The `add-resident-to-event` command adds an existing resident to a specific event under a CCA.
 
 Format:
-`add-resident-to-event <matric number>; <event name>; <cca name>`
+`add-resident-to-event <unique identifier>; <event name>; <cca name>`
 
 ---
 
@@ -664,7 +664,7 @@ Note that `EventNotFoundException` sits outside the `CcaLedgerException` hierarc
 The `view-my-events` command displays all events that a resident is participating in.
 
 Format:  
-`view-my-events <matric number>`
+`view-my-events <unique identifier>`
 
 ---
 
@@ -799,15 +799,15 @@ Format:
 
 ## Appendix D: Glossary
 
-| Term | Meaning |
-|------|--------|
-| CCA | Co-Curricular Activity |
-| Resident | A student participating in CCAs |
-| EXCO | Executive Committee member of a CCA |
-| Matric Number | Unique identifier for a resident |
-| Event | Activity organized under a CCA |
-| Points | Score assigned based on participation |
-| CLI | Command Line Interface |
+| Term              | Meaning                               |
+|-------------------|---------------------------------------|
+| CCA               | Co-Curricular Activity                |
+| Resident          | A student participating in CCAs       |
+| EXCO              | Executive Committee member of a CCA   |
+| Unique Identifier | Any unique identifier for a resident  |
+| Event             | Activity organized under a CCA        |
+| Points            | Score assigned based on participation |
+| CLI               | Command Line Interface                |
 
 ---
 
@@ -937,18 +937,18 @@ public class CcaLedgerException extends Exception {
 ---
 ### Exception Reference
 
-| Exception | Parent | When thrown |
-|---|---|---|
-| `CcaLedgerException` | `Exception` | Base class — not thrown directly |
-| `CcaNotFoundException` | `CcaLedgerException` | A CCA name does not match any stored CCA |
-| `DuplicateCcaException` | `CcaLedgerException` | An `add-cca` command names a CCA that already exists |
+| Exception | Parent | When thrown                                                         |
+|---|---|---------------------------------------------------------------------|
+| `CcaLedgerException` | `Exception` | Base class — not thrown directly                                    |
+| `CcaNotFoundException` | `CcaLedgerException` | A CCA name does not match any stored CCA                            |
+| `DuplicateCcaException` | `CcaLedgerException` | An `add-cca` command names a CCA that already exists                |
 | `InvalidCcaLevelException` | `CcaLedgerException` | The level argument is not one of `HIGH`, `MEDIUM`, `LOW`, `UNKNOWN` |
-| `DuplicateResidentException` | `CcaLedgerException` | An `add-resident` command uses a matric number already in the system |
-| `ResidentNotFoundException` | `CcaLedgerException` | A matric number does not match any stored resident |
-| `ResidentAlreadyInCcaException` | `CcaLedgerException` | A resident is added to a CCA they already belong to |
-| `InvalidCommandException` | `CcaLedgerException` | The parser receives input it cannot map to any command |
-| `EventNotFoundException` | `Exception` | An event name does not match any stored event |
-| `DuplicateEventException` | `RuntimeException` | An event with the same name already exists (unchecked) |
+| `DuplicateResidentException` | `CcaLedgerException` | An `add-resident` command uses an identifier already in the system  |
+| `ResidentNotFoundException` | `CcaLedgerException` | The identifier does not match any stored resident                   |
+| `ResidentAlreadyInCcaException` | `CcaLedgerException` | A resident is added to a CCA they already belong to                 |
+| `InvalidCommandException` | `CcaLedgerException` | The parser receives input it cannot map to any command              |
+| `EventNotFoundException` | `Exception` | An event name does not match any stored event                       |
+| `DuplicateEventException` | `RuntimeException` | An event with the same name already exists (unchecked)              |
 
 ---
 
@@ -994,17 +994,17 @@ This separation ensures that `Parser` never needs to know about domain state, an
 
 ### Where Each Exception Is Used
 
-| Exception | Commands involved | Triggered by |
-|---|---|---|
-| `CcaNotFoundException` | `AddCcaCommand`, `DeleteCcaCommand`, `AddEventCommand`, `AddResidentToCcaCommand`, `AddExcoToCcaCommand`, `AddResidentToEventCommand`, `ViewCcaExco` | CCA name not matching any stored CCA |
-| `DuplicateCcaException` | `AddCcaCommand` | `CcaManager.addCCA()` when the CCA name already exists |
+| Exception | Commands involved | Triggered by                                                                                                                      |
+|---|---|-----------------------------------------------------------------------------------------------------------------------------------|
+| `CcaNotFoundException` | `AddCcaCommand`, `DeleteCcaCommand`, `AddEventCommand`, `AddResidentToCcaCommand`, `AddExcoToCcaCommand`, `AddResidentToEventCommand`, `ViewCcaExco` | CCA name not matching any stored CCA                                                                                              |
+| `DuplicateCcaException` | `AddCcaCommand` | `CcaManager.addCCA()` when the CCA name already exists                                                                            |
 | `InvalidCcaLevelException` | `AddCcaCommand` | `CcaManager.addCCA()` when the level string is invalid; `Parser.getCcaLevel()` falls back to `UNKNOWN` silently before this point |
-| `DuplicateResidentException` | `AddResidentCommand` | `ResidentManager.addResident()` when the matric number already exists |
-| `ResidentNotFoundException` | `DeleteResidentCommand`, `AddResidentToCcaCommand`, `AddExcoToCcaCommand`, `AddResidentToEventCommand` | Matric number not matching any stored resident |
-| `ResidentAlreadyInCcaException` | `AddResidentToCcaCommand`, `AddExcoToCcaCommand` | `Cca.addResidentToCca()` when the resident already belongs to that CCA |
-| `InvalidCommandException` | `Parser` | Input that cannot be mapped to any known command; `Parser` returns `UnknownCommand` in most cases instead of throwing |
-| `EventNotFoundException` | `AddResidentToEventCommand` | `EventManager.addResidentToEvent()` when the event name does not match any stored event |
-| `DuplicateEventException` | `EventManager` | `EventManager.addEvent()` when an event with the same name already exists; unchecked, so not declared in method signatures |
+| `DuplicateResidentException` | `AddResidentCommand` | `ResidentManager.addResident()` when the identifier already exists                                                                |
+| `ResidentNotFoundException` | `DeleteResidentCommand`, `AddResidentToCcaCommand`, `AddExcoToCcaCommand`, `AddResidentToEventCommand` | Identifier not matching any stored resident                                                                                       |
+| `ResidentAlreadyInCcaException` | `AddResidentToCcaCommand`, `AddExcoToCcaCommand` | `Cca.addResidentToCca()` when the resident already belongs to that CCA                                                            |
+| `InvalidCommandException` | `Parser` | Input that cannot be mapped to any known command; `Parser` returns `UnknownCommand` in most cases instead of throwing             |
+| `EventNotFoundException` | `AddResidentToEventCommand` | `EventManager.addResidentToEvent()` when the event name does not match any stored event                                           |
+| `DuplicateEventException` | `EventManager` | `EventManager.addEvent()` when an event with the same name already exists; unchecked, so not declared in method signatures        |
 
 
 
@@ -1073,10 +1073,10 @@ Drama|LOW
 
 One row per resident.
 
-| Column | Description |
-|--------|-------------|
-| `name` | Full name of the resident |
-| `matricNumber` | Unique matric number (primary key) |
+| Column | Description                     |
+|--------|---------------------------------|
+| `name` | Full name of the resident       |
+| `matricNumber` | Unique identifier (primary key) |
 ```
 Alice Tan|A1234567X
 Bob Lee|A7654321Y
@@ -1173,10 +1173,10 @@ If a file does not exist (e.g. on first run), the load method for that file retu
 
 When loading `events.txt`, `memberships.txt`, and `event_attendance.txt`, `StorageManager` must look up existing in-memory objects by their string identifiers. Three finder methods support this:
 
-| Method | Class | Looks up by |
-|--------|-------|-------------|
-| `CcaManager.findByName(String)` | `CcaManager` | CCA name (case-insensitive) |
-| `ResidentManager.findByMatric(String)` | `ResidentManager` | Matric number (case-insensitive) |
+| Method | Class | Looks up by                                         |
+|--------|-------|-----------------------------------------------------|
+| `CcaManager.findByName(String)` | `CcaManager` | CCA name (case-insensitive)                         |
+| `ResidentManager.findByMatric(String)` | `ResidentManager` | Unique identifier (case-insensitive)                |
 | `EventManager.findByNameAndCca(String, String)` | `EventManager` | Event name + CCA name (composite, case-insensitive) |
 
 If a FK cannot be resolved (e.g. a CCA was deleted but a stale row remains in `memberships.txt`), the row is **skipped with a warning log** rather than crashing the application. This makes the storage layer resilient to manual edits or partial corruption.
