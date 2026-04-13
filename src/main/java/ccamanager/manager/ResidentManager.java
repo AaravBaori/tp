@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class ResidentManager {
     private static final Logger logger = Logger.getLogger(ResidentManager.class.getName());
-    private static ArrayList<Resident> residents;
+    private final ArrayList<Resident> residents;
 
     public ResidentManager() {
         residents = new ArrayList<>();
