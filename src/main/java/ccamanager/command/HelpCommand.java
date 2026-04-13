@@ -27,6 +27,7 @@ public class HelpCommand extends Command {
         sb.append("> add-resident-to-cca <matric>; <cca name>; <points>\n");
         sb.append("> view-points\n");
         sb.append("> resident-stats\n\n");
+        sb.append("> update-point <matric>; <ccaName>; <point>");
 
         sb.append("[Event Management]\n");
         sb.append("> add-event <name>; <cca name>; <date time>\n");

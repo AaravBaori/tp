@@ -169,6 +169,21 @@ public class Parser {
             }
             return new ViewResidentInCcaCommand(args[0]);
 
+        case "update-point":
+            if (args.length < 3) {
+                return new UnknownCommand("Usage: add-resident-to-event <matric>; <event>; <cca>");
+            }
+            if (args[0].isBlank()) {
+                return new UnknownCommand("Matric number cannot be empty");
+            }
+            if (args[1].isBlank()) {
+                return new UnknownCommand("CCA name cannot be empty");
+            }
+            if (args[2].isBlank()) {
+                return new UnknownCommand("Point cannot be empty.");
+            }
+            return new UpdateCcaPointCommand(args[0],args[1],args[2]);
+
         default:
             // This captures cases like "help" (if not caught above) or completely unknown words
             return parseSingleWordFallback(commandWord);
