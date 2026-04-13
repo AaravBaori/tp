@@ -13,11 +13,11 @@ public class HelpCommand extends Command {
         sb.append("--- CCA Manager Help Menu ---\n\n");
 
         sb.append("[CCA Management]\n");
-        sb.append("> add-cca <name>; <level (HIGH, MEDIUM, LOW, UNKNOWN)>\n");
+        sb.append("> add-cca <name>; <level (HIGH, MEDIUM, LOW)>\n");
         sb.append("> delete-cca <name>\n");
         sb.append("> view-cca\n");
-        sb.append("> add-exco-to-cca <matric> ; <cca name>\n");
-        sb.append("> view-exco\n");
+        sb.append("> add-exco-to-cca <matric>; <cca name>\n");
+        sb.append("> view-exco <cca name>\n");
         sb.append("> cca-stats\n\n");
 
         sb.append("[Resident Management]\n");
@@ -26,6 +26,8 @@ public class HelpCommand extends Command {
         sb.append("> view-resident\n");
         sb.append("> add-resident-to-cca <matric>; <cca name>; <points>\n");
         sb.append("> view-points\n");
+        sb.append("> sort-points\n");
+        sb.append("> update-point <matric>; <cca name>; <points>\n");
         sb.append("> resident-stats\n\n");
 
         sb.append("[Event Management]\n");
