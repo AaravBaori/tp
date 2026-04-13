@@ -169,7 +169,7 @@ public class Parser {
             if (args[1].isBlank()) {
                 return new UnknownCommand("CCA name cannot be empty.");
             }
-            return new AddExcoToCcaCommand(args[0], args[1]);
+            return new AddExcoToCcaCommand(args[0], args[1],args[2]);
 
         case "view-cca-event":
             if (args[0].isBlank()) {
