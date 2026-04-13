@@ -20,19 +20,20 @@ public class ViewMyEvents extends Command {
     }
 
     public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
-        ArrayList<Event> ccaEvents = eventManager.viewMyEvents(matricNumber);
         Resident resident = residentManager.matchingResident(matricNumber);
         if (resident == null) {
-            ui.showMessage("You("+matricNumber+") are not registered as resident!");
+            ui.showError("Resident with matric number " + matricNumber + " not found.");
+            return;
+        }
+        ArrayList<Event> ccaEvents = eventManager.viewMyEvents(matricNumber);
+        if (ccaEvents.isEmpty()) {
+            ui.showMessage("There is no event for you!");
         } else {
-            if (ccaEvents.isEmpty()) {
-                ui.showMessage("There is no event for you!");
-            } else {
-                ui.showMessage("Hi " + resident.getName() + ", here are your events: ");
-                ui.viewMyCcas(ccaEvents);
-            }
+            ui.showMessage("Hi " + resident.getName() + ", here are your events: ");
+            ui.viewMyCcas(ccaEvents);
         }
     }
+
     @Override
     public boolean isReadOnly() {
         return true;
