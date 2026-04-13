@@ -76,9 +76,9 @@ Follow the steps below to set up and run the application:
 
 ### Adding CCA
 
-Add a new CCA with its priority
+Add a new CCA with its priority. Priority can be HIGH/MEDIUM/LOW/UNKNOWN
 
-Format: `add-resident <Resident Name>; <Student Number>`
+Format: `add-cca <cca name>; <level>`
 
 Example :
 
