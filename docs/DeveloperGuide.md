@@ -593,7 +593,7 @@ The sorting is performed at command level instead of within the `Ui`, so that pr
 The `add-event` command adds a new event under a specified CCA.
 
 Format:
-`add-event <event name>; <cca name>; <date/time>`
+`add-event <event name>; <cca name>; <date (YYYY-MM-DD)>`
 
 ---
 
@@ -866,8 +866,8 @@ view-resident
 #### 5. Add Events
 
 ```
-add-event Practice-Week1; Basketball; 29/3/26
-add-event Orientation; Dance; 2/4/26
+add-event Practice-Week1; Basketball; 2026-03-29
+add-event Orientation; Dance; 2026-04-02
 ```
 
 ---
@@ -899,11 +899,29 @@ view-exco Basketball
 
 ---
 
-#### 9. View Points and Statistics
+#### 9. View Points
 
 ---
 
-#### 10. Delete Operations
+#### 10. View Statistics
+
+```
+add-cca Basketball; HIGH
+add-cca Football; MEDIUM
+add-cca Tennis; LOW
+add-resident John; 2341
+add-resident James; 4321
+add-resident Jane; 5678
+add-resident-to-cca 1234; Basketball; 9
+add-resident-to-cca 4321; Football; 9
+add-resident-to-cca 5678; Tennis; 8
+cca-stats
+resident-stats
+```
+
+---
+
+#### 11. Delete Operations
 
 ```
 delete-resident A1234567B
@@ -1088,11 +1106,11 @@ Bob Lee|A7654321Y
 
 One row per event. `ccaName` is a foreign key referencing `ccas.txt`.
 
-| Column | Description |
-|--------|-------------|
-| `eventName` | Name of the event |
-| `ccaName` | FK → `ccas.txt` name column |
-| `eventDate` | Date/time string as entered by the user |
+| Column | Description                                             |
+|--------|---------------------------------------------------------|
+| `eventName` | Name of the event                                       |
+| `ccaName` | FK → `ccas.txt` name column                             |
+| `eventDate` | Date string as entered by the user in YYYY-MM-DD format |
 ```
 AGM|Basketball|2025-04-01
 Finals|Chess|2025-05-10

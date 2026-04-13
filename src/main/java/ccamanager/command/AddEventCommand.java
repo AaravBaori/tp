@@ -65,7 +65,7 @@ public class AddEventCommand extends Command {
         try {
             LocalDate.parse(dateTime, DATE_FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid event date. Please use yyyy-MM-dd format.");
+            throw new IllegalArgumentException("Please enter a valid date in YYYY-MM-DD format.");
         }
     }
 }

@@ -140,8 +140,8 @@ Example:
 > view-cca-events Basketball
 _________________________________________________________________________________
 Here are the events:
-1. training date: 05/06/2025
-2. finals date: 12/12/2025
+1. training date: 2025-06-05
+2. finals date: 2025-12-12
 _________________________________________________________________________________
 ```
 ---
@@ -150,7 +150,7 @@ ________________________________________________________________________________
 
 Add an existing resident to a CCA and assign their points for participation.
 
-Format: `add-resident-to-cca <unique identifier> <cca name> <points>`
+Format: `add-resident-to-cca <unique identifier>; <cca name>; <points>`
 
 Example:
 ```
@@ -168,14 +168,14 @@ ________________________________________________________________________________
 
 Adding an event to any CCA
 
-Format: `add-event <event name>; <cca name>; <date>`
+Format: `add-event <event name>; <cca name>; <date (YYYY-MM-DD)>`
 
 Example :
 
 ```
-> add-event Practice-Week1; Dance; 29/3/26
+> add-event Practice-Week1; Dance; 2026-03-29
 _________________________________________________________________________________
- Event added: Practice-Week1 for the CCA Dance, during 29/3/26
+ Event added: Practice-Week1 for the CCA Dance, during 2026-03-29
 _________________________________________________________________________________
 ```
 
@@ -227,8 +227,8 @@ Example:
 > view-my-events A1234567B
 Hi John, here are your events:
 _________________________________________________________________________________
-1. Practice-Week1 | Basketball | 29/3/26
-2. Orientation | ComputingClub | 2/4/26
+1. Practice-Week1 | Basketball | 2026-03-29
+2. Orientation | ComputingClub | 2026-04-02
 _________________________________________________________________________________
 ```
 
@@ -487,7 +487,7 @@ ________________________________________________________________________________
 > resident-stats
 
 [Event Management]
-> add-event <name>; <cca name>; <date time>
+> add-event <name>; <cca name>; <date (YYYY-MM-DD)>
 > add-resident-to-event <unique identifier>; <event name>; <cca name>
 > view-cca-events <cca name>
 > view-my-events <unique identifier>
@@ -517,7 +517,7 @@ ________________________________________________________________________________
 > view-points
 > resident-stats
 
-> add-event <name>; <cca name>; <date time>
+> add-event <name>; <cca name>; <date (YYYY-MM-DD)>
 > add-resident-to-event <unique identifier>; <event name>; <cca name>
 > view-cca-events <cca name>
 > view-my-events <unique identifier>

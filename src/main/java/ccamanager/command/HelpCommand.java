@@ -31,7 +31,7 @@ public class HelpCommand extends Command {
         sb.append("> resident-stats\n\n");
 
         sb.append("[Event Management]\n");
-        sb.append("> add-event <name>; <cca name>; <date time>\n");
+        sb.append("> add-event <name>; <cca name>; <date (YYYY-MM-DD)>\n");
         sb.append("> add-resident-to-event <matric>; <event name>; <cca name>\n");
         sb.append("> view-cca-events <cca name>\n");
         sb.append("> view-my-events <matric>\n\n");
