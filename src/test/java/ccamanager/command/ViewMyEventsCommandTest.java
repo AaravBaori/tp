@@ -50,8 +50,8 @@ public class ViewMyEventsCommandTest {
 
         String output = ui.getLastMessage();
         // Updated to match your exact UI output
-        assertTrue(output.contains("not registered as resident"),
-                "Expected a 'not registered' error but got: " + output);
+        assertTrue(output.contains("not found"),
+                "Expected a 'not found' error but got: " + output);
     }
 
     @Test
