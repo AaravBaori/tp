@@ -9,6 +9,9 @@ import ccamanager.manager.ResidentManager;
 import ccamanager.model.Cca;
 import ccamanager.ui.Ui;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,14 +20,16 @@ import java.util.logging.Logger;
  */
 public class AddEventCommand extends Command {
     private static final Logger logger = Logger.getLogger(AddEventCommand.class.getName());
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     private String eventName;
     private String ccaName;
     private String dateTime;
 
     public AddEventCommand(String eventName, String ccaName, String dateTime) {
         assert eventName != null && !eventName.isBlank() : "Event name cannot be null or empty";
-        assert ccaName != null && !eventName.isBlank() : "CCA name cannot be null or empty";
-        assert dateTime != null && !eventName.isBlank() : "Date/Time of Event cannot be null or empty";
+        assert ccaName != null && !ccaName.isBlank() : "CCA name cannot be null or empty";
+        assert dateTime != null && !dateTime.isBlank() : "Date/Time of Event cannot be null or empty";
 
         this.eventName = eventName;
         this.ccaName = ccaName;
@@ -38,22 +43,30 @@ public class AddEventCommand extends Command {
     public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         try {
             Cca cca = ccaManager.getCCAList().stream()
-                    .filter(x -> x.getName().equalsIgnoreCase(ccaName)) // Added IgnoreCase for robustness
+                    .filter(x -> x.getName().equalsIgnoreCase(ccaName))
                     .findFirst()
                     .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
-            if(eventName.isBlank()) {
+
+            if (eventName.isBlank()) {
                 throw new InvalidEventName("Please enter a valid event name.");
             }
+
+            validateDate(dateTime);
 
             eventManager.addEvent(eventName, cca, dateTime);
             ui.showMessage("Event added: " + eventName + " for the CCA " + ccaName + ", during " + dateTime);
 
-        } catch (CcaNotFoundException | DuplicateEventException | InvalidEventName e) {
+        } catch (CcaNotFoundException | DuplicateEventException | InvalidEventName | IllegalArgumentException e) {
             ui.showError(e.getMessage());
         }
     }
 
-
+    private void validateDate(String dateTime) {
+        try {
+            LocalDate.parse(dateTime, DATE_FORMATTER);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid event date. Please use yyyy-MM-dd format.");
+        }
+    }
 }
-
 
