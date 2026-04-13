@@ -450,7 +450,7 @@ Format:
 
 #### Implementation
 
-- The `Parser` creates a `AddResdientToCcaCommmand` object.
+- The `Parser` creates a `AddResdientToCcaCommand` object.
 - The command retrieves the `Resident` from `ResidentManager`.
 - The corresponding `Cca` is retrieved from `CcaManager`.
 - The `Resident` is added to the Cca using `Cca.addResidentToCca(...)`.
