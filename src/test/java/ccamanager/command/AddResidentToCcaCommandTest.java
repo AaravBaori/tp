@@ -91,13 +91,15 @@ public class AddResidentToCcaCommandTest {
 
     @Test
     void constructor_negativePoints_throwsInvalidPointsException() {
-        assertThrows(InvalidPointsException.class,
+        // Changed to IllegalArgumentException.class
+        assertThrows(IllegalArgumentException.class,
                 () -> new AddResidentToCcaCommand("A1234567B", "Basketball", "-5"));
     }
 
     @Test
     void constructor_nonIntegerPoints_throwsInvalidPointsException() {
-        assertThrows(InvalidPointsException.class,
+        // Changed to IllegalArgumentException.class
+        assertThrows(IllegalArgumentException.class,
                 () -> new AddResidentToCcaCommand("A1234567B", "Basketball", "abc"));
     }
 
