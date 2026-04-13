@@ -4,6 +4,7 @@ import ccamanager.enumerations.CcaLevel;
 import ccamanager.exceptions.CcaNotFoundException;
 import ccamanager.exceptions.InvalidCcaLevelException;
 import ccamanager.model.Cca;
+import ccamanager.model.Resident;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,6 +53,21 @@ public class CcaManager {
     public ArrayList<Cca> getCCAList() {
         assert ccaList != null : "ccaList should be initialized";
         return ccaList;
+    }
+
+    /**
+     * Removes a resident from all CCAs they are registered in,
+     * including from the exco list if applicable.
+     * Should be called before deleting a resident to avoid stale references.
+     *
+     * @param resident the resident to remove from all CCAs
+     */
+    public void removeResidentFromAllCcas(Resident resident) {
+        assert resident != null : "Resident should not be null";
+        for (Cca cca : ccaList) {
+            cca.getResidents().remove(resident);
+            cca.getExcos().remove(resident);
+        }
     }
 
     /**

@@ -16,7 +16,7 @@ public class DeleteResidentCommand extends Command {
     private String matricNumber;
 
     public DeleteResidentCommand(String matricNumber){
-        this.matricNumber=matricNumber;
+        this.matricNumber = matricNumber;
 
     }
 
@@ -24,17 +24,16 @@ public class DeleteResidentCommand extends Command {
     public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         try {
             Resident resident = residentManager.matchingResident(matricNumber);
-            if(resident==null) {
-                ui.showError("Resident with matric number " + matricNumber + " does not exist" );
+            if (resident == null) {
+                ui.showError("Resident with matric number " + matricNumber + " does not exist");
                 return;
             }
             String residentName = resident.getName();
+            ccaManager.removeResidentFromAllCcas(resident);
             residentManager.deleteResident(matricNumber);
             ui.showMessage("Resident deleted: " + residentName);
         } catch (ResidentNotFoundException e) {
             ui.showMessage(e.getMessage());
         }
     }
-
-
 }
