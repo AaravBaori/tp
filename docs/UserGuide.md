@@ -76,7 +76,7 @@ Follow the steps below to set up and run the application:
 
 ### Adding CCA
 
-Add a new CCA with its priority. Priority can be HIGH/MEDIUM/LOW/UNKNOWN
+Add a new CCA with its priority. Priority can be HIGH/MEDIUM/LOW
 
 Format: `add-cca <cca name>; <level>`
 
@@ -225,10 +225,12 @@ Example:
 
 ```
 > view-my-events A1234567B
-Hi John, here are your events:
 _________________________________________________________________________________
-1. Practice-Week1 | Basketball | 2026-03-29
-2. Orientation | ComputingClub | 2026-04-02
+ Hi John, here are your events: 
+_________________________________________________________________________________
+_________________________________________________________________________________
+1. Basketball: Practice-Week1 date: 2026-03-29
+2. ComputingClub: Orientation date: 2026-04-02
 _________________________________________________________________________________
 ```
 
@@ -503,7 +505,7 @@ ________________________________________________________________________________
 # Command Summary
 
 ```
-> add-cca <name>; <level (HIGH, MEDIUM, LOW, UNKNOWN)>
+> add-cca <name>; <level (HIGH, MEDIUM, LOW)>
 > delete-cca <name>
 > view-cca
 > add-exco-to-cca <unique identifier>; <cca name>
