@@ -175,15 +175,15 @@ public class Parser {
             }
             return new AddExcoToCcaCommand(args[0], args[1],args[2]);
 
-        case "view-cca-event":
+        case "view-cca-events":
             if (args[0].isBlank()) {
                 return new UnknownCommand("CCA name cannot be empty.");
             }
             return new ViewCcaEvents(args[0]);
 
-        case "view-my-event":
+        case "view-my-events":
             if (args[0].isBlank()) {
-                return new UnknownCommand("Resident name cannot be empty.");
+                return new UnknownCommand("Resident matric number cannot be empty.");
             }
             return new ViewMyEvents(args[0]);
         case "update-point":

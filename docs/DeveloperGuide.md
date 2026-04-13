@@ -450,7 +450,7 @@ Format:
 
 #### Implementation
 
-- The `Parser` creates a `AddResdientToCcaCommmand` object.
+- The `Parser` creates a `AddResdientToCcaCommand` object.
 - The command retrieves the `Resident` from `ResidentManager`.
 - The corresponding `Cca` is retrieved from `CcaManager`.
 - The `Resident` is added to the Cca using `Cca.addResidentToCca(...)`.
@@ -600,16 +600,16 @@ Note that `EventNotFoundException` sits outside the `CcaLedgerException` hierarc
 
 #### Overview
 
-The `view-my-event` command displays all events that a resident is participating in.
+The `view-my-events` command displays all events that a resident is participating in.
 
 Format:  
-`view-my-event <matric number>`
+`view-my-events <matric number>`
 
 ---
 
 #### Implementation
 
-The `view-my-event` command retrieves and displays all events associated with a resident.
+The `view-my-events` command retrieves and displays all events associated with a resident.
 
 The `Parser` creates a `ViewMyEvents` object from user input. `ViewMyEvents.execute()` calls `EventManager.viewMyEvents(matricNumber)` to retrieve the matching events. It then retrieves the resident using `ResidentManager.matchingResident(...)`, prints a greeting using the resident's name, and passes the event list to `Ui.viewMyCcas(...)` for display.
 
@@ -628,16 +628,16 @@ This command follows the Command Pattern described in the [Architecture section]
 
 #### Overview
 
-The `view-cca-event` command displays all events under a specified CCA.
+The `view-cca-events` command displays all events under a specified CCA.
 
 Format:  
-`view-cca-event <cca name>`
+`view-cca-events <cca name>`
 
 ---
 
 #### Implementation
 
-The `view-cca-event` command retrieves and displays all events belonging to a specific CCA.
+The `view-cca-events` command retrieves and displays all events belonging to a specific CCA.
 
 The `Parser` creates a `ViewCcaEvents` object from user input. `ViewCcaEvents.execute()` calls `EventManager.viewCcaEvents(ccaName)` to retrieve the matching events, and the resulting list is passed to `Ui.viewMatchingCcas(...)` for display.
 
@@ -823,8 +823,8 @@ add-resident-to-event A7654321C; Orientation Dance
 #### 7. View Events
 
 ```
-view-cca-event Basketball
-view-my-event A1234567B
+view-cca-events Basketball
+view-my-events A1234567B
 ```
 
 ---

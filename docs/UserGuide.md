@@ -76,9 +76,9 @@ Follow the steps below to set up and run the application:
 
 ### Adding CCA
 
-Add a new CCA with its priority
+Add a new CCA with its priority. Priority can be HIGH/MEDIUM/LOW/UNKNOWN
 
-Format: `add-resident <Resident Name>; <Student Number>`
+Format: `add-cca <cca name>; <level>`
 
 Example :
 
@@ -128,20 +128,20 @@ ________________________________________________________________________________
 
 ---
 
-### Viewing Events for a CCA: `view-cca-event`
+### Viewing Events for a CCA: `view-cca-events`
 
 View all events belonging to a specific CCA.
 
-Format: view-cca-event <cca name>
+Format: view-cca-events <cca name>
 
 Example:
 
 ```
-> view-cca-event Basketball
+> view-cca-events Basketball
 _________________________________________________________________________________
-Here are the events under Basketball:
-1. Practice-Week1 | 29/3/26
-2. Friendly-Match | 5/4/26
+Here are the events:
+1. training date: 05/06/2025
+2. finals date: 12/12/2025
 _________________________________________________________________________________
 ```
 ---
@@ -154,7 +154,7 @@ Format: `add-resident-to-cca <matric number> <cca name> <points>`
 
 Example:
 ```
-> add-resident-to-cca A1234567B Basketball 10
+> add-resident-to-cca A1234567B; Basketball; 10
 _________________________________________________________________________________
  Resident John | A1234567B was added to CCA: Basketball with 10 points.
 _________________________________________________________________________________
@@ -173,7 +173,7 @@ Format: `add-event <event name>; <cca name>; <date>`
 Example :
 
 ```
-> add-event Practice-Week1 Dance 29/3/26
+> add-event Practice-Week1; Dance; 29/3/26
 _________________________________________________________________________________
  Event added: Practice-Week1 for the CCA Dance, during 29/3/26
 _________________________________________________________________________________
@@ -215,16 +215,16 @@ ________________________________________________________________________________
 
 ---
 
-### Viewing My Events: `view-my-event`
+### Viewing My Events: `view-my-events`
 
 View all events that a resident is participating in.
 
-Format: view-my-event <matric number>
+Format: view-my-events <matric number>
 
 Example:
 
 ```
-> view-my-event A1234567B
+> view-my-events A1234567B
 Hi John, here are your events:
 _________________________________________________________________________________
 1. Practice-Week1 | Basketball | 29/3/26
@@ -245,7 +245,7 @@ Format: `add-resident <resident name>; <matric number>`
 Example:
 
 ```
-> add-resident Ramesh A1234567B
+> add-resident Ramesh; A1234567B
 _________________________________________________________________________________
 Resident added: Ramesh A1234567B
 _________________________________________________________________________________
@@ -447,22 +447,32 @@ Format: `help`
 Example:
 
 ```
-> help
 _________________________________________________________________________________
- Here is a list of all commands:
-> add-cca <cca name> <level (HIGH, MEDIUM, LOW or UNKNOWN)>
+ --- CCA Manager Help Menu ---
+
+[CCA Management]
+> add-cca <name>; <level (HIGH, MEDIUM, LOW, UNKNOWN)>
+> delete-cca <name>
 > view-cca
-> delete-cca <cca name>
-> add-event <event name> <cca name> <data time>
-> add-resident <name> <matric number>
-> view-resident
-> view-exco <cca name>
-> add-resident-to-cca <matric number> <cca name> <points>
-> add-resident-to-event <matric number> <event name> <cca name>
-> add-exco-to-cca <matric number> <cca name>
-> view-points
+> add-exco-to-cca <matric> ; <cca name>
+> view-exco
 > cca-stats
+
+[Resident Management]
+> add-resident <name>; <matric>
+> delete-resident <matric>
+> view-resident
+> add-resident-to-cca <matric>; <cca name>; <points>
+> view-points
 > resident-stats
+
+[Event Management]
+> add-event <name>; <cca name>; <date time>
+> add-resident-to-event <matric>; <event name>; <cca name>
+> view-cca-events <cca name>
+> view-my-events <matric>
+
+[General]
 > help
 > bye
 _________________________________________________________________________________
@@ -478,9 +488,9 @@ view-cca
 delete-cca <cca name>
 
 add-event <event name>; <cca name>; <date>
-view-cca-event <cca name>
+view-cca-events <cca name>
 add-resident-to-event <matric number>; <event name>; <cca name>
-view-my-event <matric number>
+view-my-events <matric number>
 
 add-resident <name>; <matric number>
 view-resident

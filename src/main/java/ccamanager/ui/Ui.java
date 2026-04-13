@@ -209,7 +209,7 @@ public class Ui {
      */
     public void viewMatchingCcas(ArrayList<Event> events){
         System.out.println(DIVIDER);
-        System.out.println("Here are your events:");
+        System.out.println("Here are the events:");
         for(int i=0; i<events.size();i++){
             System.out.println((i+1)+"." +" " +events.get(i).getEventName()+ " date: " + events.get(i).getEventDate());
         }
