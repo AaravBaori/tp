@@ -1,42 +1,48 @@
 @startuml add-exco-to-cca
 
-skinparam defaultFontSize 12
-skinparam SequenceArrowThickness 1.2
+' Match the styling of the add-event diagram
+skinparam defaultFontSize 13
+skinparam SequenceArrowThickness 1.5
 skinparam SequenceParticipantBackgroundColor #f9f9f9
-skinparam maxMessageSize 300
 
-title Add EXCO to CCA
+title add-exco-to-cca Command
 
 actor ":User" as User
-participant "ccaLedger" as CL
-participant "ui" as Ui
-participant "parser" as Parser
-participant "cmd : AddExcoCmd" as Command
+participant "ccaLedger : CcaLedger" as CL
+participant "ui : Ui" as Ui
+participant "parser : Parser" as Parser
+participant "command : AddExcoCmd" as Command
+participant "ccaManager : CcaManager" as CcaManager
+participant "residentManager : ResidentManager" as ResidentManager
 
-box "Logic Layer" #f2f2f2
-    participant "Managers" as MGR
-end box
+ref over User, CL, Ui, Parser, Command
+  SD_CommandExecution
+end ref
 
-ref over User, CL, Ui, Parser, Command : SD_CommandExecution
+' Data Retrieval spread out to increase width
+Command -> CcaManager : getCCAList()
+activate CcaManager
+CcaManager --> Command : ccaList : ArrayList<Cca>
+deactivate CcaManager
 
-' Data Retrieval
-Command -> MGR : getCCAList()
-activate MGR
-MGR --> Command : ccaList
-deactivate MGR
-
-Command -> MGR : getResidentList()
-activate MGR
-MGR --> Command : residentList
-deactivate MGR
+Command -> ResidentManager : getResidentList()
+activate ResidentManager
+ResidentManager --> Command : residentList : ArrayList<Resident>
+deactivate ResidentManager
 
 ' Logic Flow
 alt CCA / Resident not found
     Command -> Ui : showError("Not found")
+    activate Ui
+    Ui --> Command
+    deactivate Ui
 else Resident already in CCA
     Command -> Ui : showError("Already in CCA")
+    activate Ui
+    Ui --> Command
+    deactivate Ui
 else Success
-    ' Showing internal logic as a combined action to save horizontal space
+    ' Explicit internal call
     Command -> Command : updateDomainModels(res, cca)
     activate Command
     deactivate Command
