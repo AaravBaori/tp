@@ -410,7 +410,9 @@ ________________________________________________________________________________
 
 ### Promoting/Assigning a resident to EXCO: `add-exco-to-cca`
 
-Assigns a resident as an Executive Committee member for a specific CCA.
+Assigns a resident as an Executive Committee member for a specific CCA and also adds it to the member list.
+
+If we are assigning a member of the cca as an EXCO, then the resident is added into EXCO list with the same points.
 
 Format: `add-exco-to-cca <matric number>; <cca name>`
 

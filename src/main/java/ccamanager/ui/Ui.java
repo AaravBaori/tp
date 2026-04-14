@@ -109,14 +109,16 @@ public class Ui {
 
     /**
      * Prints the full list of EXCOs of a CCA.
+     *
      * @param excoList the list to display
+     * @param cca_name
      */
-    public void showExcoList(ArrayList<Resident> excoList) {
+    public void showExcoList(ArrayList<Resident> excoList, String cca_name) {
         System.out.println(DIVIDER);
         if (excoList.isEmpty()) {
             showMessage("There are no EXCO assigned currently. Please add EXCOs using add-exco-to-cca command");
         } else {
-            System.out.println("Here is the complete list of all the EXCOs :");
+            System.out.println("Here is the complete list of all the EXCOs of " + cca_name + ":");
             for(int i = 1; i < excoList.size() + 1; i++) {
                 Resident resident = excoList.get(i-1);
                 System.out.println(i + ". " + resident);
