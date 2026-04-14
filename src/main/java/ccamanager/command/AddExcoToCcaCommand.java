@@ -25,15 +25,14 @@ public class AddExcoToCcaCommand extends Command {
 
     private final String matriculationNo;
     private final String ccaName;
-    private int point;
 
-    public AddExcoToCcaCommand(String matriculationNo, String ccaName,String point) {
+    public AddExcoToCcaCommand(String matriculationNo, String ccaName) {
         this.matriculationNo = matriculationNo != null ? matriculationNo.trim() : null;
         this.ccaName = ccaName != null ? ccaName.trim() : null;
-        this.point = Integer.parseInt(point);
+
         assert this.matriculationNo != null : "Matriculation number should not be null";
         assert this.ccaName != null : "CCA name should not be null";
-        assert this.point>=0 : "CCA point should be more than 0";
+
     }
 
     @Override
@@ -45,12 +44,26 @@ public class AddExcoToCcaCommand extends Command {
                     .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
 
             Resident resident = residentManager.getResidentList().stream()
-                    .filter(x -> x.getMatricNumber().equals(matriculationNo))
+                    .filter(x -> x.getMatricNumber().equalsIgnoreCase(matriculationNo))
                     .findFirst()
                     .orElseThrow(() -> new ResidentNotFoundException(matriculationNo + " not found."));
 
-            cca.addExcoToCca(resident);
-            resident.addCcaToResident(cca,point);
+            boolean alreadyIn = !cca.getRegisteredResidents()
+                    .stream()
+                    .filter(r -> r.getMatricNumber().equalsIgnoreCase(resident.getMatricNumber()))
+                    .toList()
+                    .isEmpty();
+
+            if(alreadyIn){
+                cca.addExcoToCca(cca.getRegisteredResidents()
+                        .stream()
+                        .filter(r -> r.getMatricNumber().equalsIgnoreCase(resident.getMatricNumber()))
+                        .toList()
+                        .get(0));
+            }else {
+                cca.addExcoToCca(resident);
+                resident.addCcaToResident(cca);
+            }
 
             ui.showMessage("Resident " + resident + " was added as an EXCO to CCA: " + cca.getName());
 

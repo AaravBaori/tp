@@ -5,7 +5,9 @@ import ccamanager.exceptions.DuplicateCcaException;
 import ccamanager.exceptions.DuplicateEventException;
 import ccamanager.exceptions.DuplicateResidentException;
 import ccamanager.exceptions.InvalidCcaLevelException;
+import ccamanager.exceptions.EventNotFoundException;
 import ccamanager.exceptions.ResidentAlreadyInCcaException;
+import ccamanager.exceptions.ResidentAlreadyInEventException;
 import ccamanager.manager.CcaManager;
 import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
@@ -48,7 +50,7 @@ public class StorageManager {
     private static final String ATTENDANCE_FILE = DATA_DIR + "/event_attendance.txt";
 
     private static final String SEP       = "|";
-    private static final String SEP_REGEX = "\\|";
+    private static final String SEP_REGEX = "(?<!\\\\)\\|";
 
     // =========================================================================
     // SAVE — full snapshot on every call, overwrites existing files
@@ -179,7 +181,8 @@ public class StorageManager {
      */
     public void load(CcaManager ccaManager,
                      ResidentManager residentManager,
-                     EventManager eventManager) throws IOException {
+                     EventManager eventManager) throws IOException, EventNotFoundException,
+            ResidentAlreadyInEventException {
         ensureDataDir();
         loadCcas(ccaManager);
         loadResidents(residentManager);
@@ -375,7 +378,7 @@ public class StorageManager {
      * (eventName + ccaName) forms a composite FK that uniquely identifies an event
      * because two CCAs may independently hold an event with the same name.
      */
-    private void loadEventAttendance(ResidentManager rm, EventManager em) throws IOException {
+    private void loadEventAttendance(ResidentManager rm, EventManager em) throws IOException, EventNotFoundException{
         Path p = Path.of(ATTENDANCE_FILE);
         if (!Files.exists(p)) {
             return;
@@ -409,7 +412,13 @@ public class StorageManager {
                 continue;
             }
 
-            event.addResident(resident);
+            try {
+                event.addResidentToEvent(resident);
+            } catch (EventNotFoundException | ResidentAlreadyInEventException e) {
+                LOGGER.log(Level.WARNING,
+                        "event_attendance.txt line {0}: could not add event_attendance — skipping: {1}",
+                        new Object[]{lineNum, e.getMessage()});
+            }
         }
     }
 

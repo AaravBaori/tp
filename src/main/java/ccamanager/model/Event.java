@@ -2,7 +2,15 @@ package ccamanager.model;
 
 import java.util.ArrayList;
 
+import ccamanager.exceptions.EventNotFoundException;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import ccamanager.exceptions.ResidentAlreadyInEventException;
+
 public class Event {
+    private static final Logger logger = Logger.getLogger(Event.class.getName());
 
     private final String eventName;
     private final Cca cca;
@@ -20,8 +28,25 @@ public class Event {
         participants = new ArrayList<Resident>();
     }
 
-    public void addResident(Resident resident) {
+    public void addResidentToEvent(Resident resident) throws EventNotFoundException, ResidentAlreadyInEventException {
+        logger.log(Level.INFO, "Attempted to add " + resident.getMatricNumber()
+                + " to " + eventName);
+
+        assert participants != null : "Registered residents list should be initialized";
+        assert resident != null : "Resident should not be null";
+
+        boolean alreadyIn = participants.stream()
+                .anyMatch(x -> x.getMatricNumber().equals(resident.getMatricNumber()));
+        if (alreadyIn) {
+            logger.log(Level.WARNING, "Resident " + resident.getMatricNumber()
+                    + " already exists in CCA " + eventName );
+            throw new ResidentAlreadyInEventException("Resident " + resident.getName()
+                    + " is already a member of " + this.eventName + ".");
+        }
+
         participants.add(resident);
+        logger.log(Level.INFO, "Successfully added resident {0} to event {1}",
+                new Object[]{resident.getName(), eventName});
     }
 
     public String getEventName() {

@@ -1,6 +1,8 @@
 package ccamanager;
 
 import ccamanager.command.Command;
+import ccamanager.exceptions.EventNotFoundException;
+import ccamanager.exceptions.ResidentAlreadyInEventException;
 import ccamanager.manager.CcaManager;
 import ccamanager.manager.EventManager;
 import ccamanager.manager.ResidentManager;
@@ -52,6 +54,8 @@ public class CcaLedger {
         } catch (IOException e) {
             ui.showError("Failed to load saved data: " + e.getMessage()
                     + " — starting with empty state.");
+        } catch (EventNotFoundException | ResidentAlreadyInEventException e) {
+            throw new RuntimeException(e);
         }
 
         ui.showWelcome();

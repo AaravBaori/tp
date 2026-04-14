@@ -118,20 +118,22 @@ public class Cca {
         boolean alreadyInExco = excoMembers.stream()
                 .anyMatch(x -> x.getMatricNumber()
                 .equals(resident.getMatricNumber()));
+        boolean alreadyIn = registeredResidents.stream()
+                .anyMatch(x -> x.getMatricNumber()
+                        .equals(resident.getMatricNumber()));
         if (alreadyInExco) {
             logger.log(Level.WARNING, "EXCO member " + resident.getMatricNumber()
                     + " already exists as an EXCO in CCA " + name );
             throw new ResidentAlreadyInExcoException("Resident " + resident.getName()
                     + " is already a EXCO of " + this.name + ".");
         }
-        excoMembers.add(resident);
-
-        boolean alreadyIn = registeredResidents.stream()
-                .anyMatch(x -> x.getMatricNumber()
-                        .equals(resident.getMatricNumber()));
         if (!alreadyIn) {
             this.addResidentToCca(resident);
+            this.excoMembers.add(resident);
+        }else{
+            this.excoMembers.add(resident);
         }
+
         logger.log(Level.INFO, "Resident " + resident.getMatricNumber()
                 + " added successfully as an EXCO of the CCA " + name);
     }

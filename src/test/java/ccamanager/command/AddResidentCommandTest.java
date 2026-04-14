@@ -26,23 +26,28 @@ public class AddResidentCommandTest {
 
     @Test
     void execute_addResident_success() {
-        new AddResidentCommand("John", "A1234567B").execute(ccaManager, residentManager, eventManager, ui);
+        new AddResidentCommand("John", "A1234567B")
+                .execute(ccaManager, residentManager, eventManager, ui);
         assertEquals(1, residentManager.getResidentList().size());
         assertEquals("John", residentManager.getResidentList().get(0).getName());
     }
 
     @Test
     void execute_addDuplicateResident_showsError() {
-        new AddResidentCommand("John", "A1234567B").execute(ccaManager, residentManager, eventManager, ui);
-        new AddResidentCommand("John", "A1234567B").execute(ccaManager, residentManager, eventManager, ui);
+        new AddResidentCommand("John", "A1234567B")
+                .execute(ccaManager, residentManager, eventManager, ui);
+        new AddResidentCommand("John", "A1234567B")
+                .execute(ccaManager, residentManager, eventManager, ui);
         assertEquals(1, residentManager.getResidentList().size());
         assertEquals("Resident with matric number A1234567B already exists.", ui.getLastMessage());
     }
 
     @Test
     void execute_addDuplicateMatricDifferentName_showsError() {
-        new AddResidentCommand("John", "A1234567B").execute(ccaManager, residentManager, eventManager, ui);
-        new AddResidentCommand("Jane", "A1234567B").execute(ccaManager, residentManager, eventManager, ui);
+        new AddResidentCommand("John", "A1234567B")
+                .execute(ccaManager, residentManager, eventManager, ui);
+        new AddResidentCommand("Jane", "A1234567B")
+                .execute(ccaManager, residentManager, eventManager, ui);
         assertEquals(1, residentManager.getResidentList().size());
         assertEquals("Resident with matric number A1234567B already exists.", ui.getLastMessage());
     }

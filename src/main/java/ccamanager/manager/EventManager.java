@@ -1,7 +1,6 @@
 package ccamanager.manager;
 
 import ccamanager.exceptions.DuplicateEventException;
-import ccamanager.exceptions.EventNotFoundException;
 import ccamanager.model.Cca;
 import ccamanager.model.Event;
 import ccamanager.model.Resident;
@@ -42,21 +41,6 @@ public class EventManager {
 
         events.add(new Event(eventName, cca, eventDate));
         logger.log(Level.INFO, "Successfully added event: {0}", eventName);
-    }
-
-
-
-    public void addResidentToEvent(String eventName, Cca cca, Resident resident) throws EventNotFoundException {
-        Event event = events.stream()
-                .filter(x -> x.getEventName()
-                        .equalsIgnoreCase(eventName) && x.getCca().getName().equalsIgnoreCase(cca.getName()))
-                .findFirst()
-                .orElseThrow(() -> new EventNotFoundException("Event " + eventName +
-                        " not found for CCA " + cca.getName() + "."));
-        
-        event.addResident(resident);
-        logger.log(Level.INFO, "Successfully added resident {0} to event {1}",
-                new Object[]{resident.getName(), eventName});
     }
 
     public ArrayList<Event> getEventList() {

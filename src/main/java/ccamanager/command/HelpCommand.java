@@ -29,12 +29,14 @@ public class HelpCommand extends Command {
         sb.append("> sort-points\n");
         sb.append("> update-point <matric>; <cca name>; <points>\n");
         sb.append("> resident-stats\n\n");
+        sb.append("> update-point <matric>; <ccaName>; <point>");
 
         sb.append("[Event Management]\n");
         sb.append("> add-event <name>; <cca name>; <date (YYYY-MM-DD)>\n");
         sb.append("> add-resident-to-event <matric>; <event name>; <cca name>\n");
         sb.append("> view-cca-events <cca name>\n");
-        sb.append("> view-my-events <matric>\n\n");
+        sb.append("> view-my-events <matric>\n");
+        sb.append("> view-residents-in-cca <cca name>\n\n");
 
         sb.append("[General]\n");
         sb.append("> help\n");

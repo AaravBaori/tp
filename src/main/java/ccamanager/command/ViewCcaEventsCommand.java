@@ -11,10 +11,10 @@ import java.util.ArrayList;
 /**
  * Command to view the list of all the events for one CCA
  */
-public class ViewCcaEvents extends Command{
+public class ViewCcaEventsCommand extends Command{
     private final String ccaName;
 
-    public ViewCcaEvents(String ccaName){
+    public ViewCcaEventsCommand(String ccaName){
         this.ccaName=ccaName;
     }
 

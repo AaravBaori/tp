@@ -236,6 +236,38 @@ public class Ui {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays the list of residents in a specific CCA.
+     *
+     * @param ccaName The name of the CCA being viewed.
+     * @param members The list of all regular residents in the CCA.
+     * @param excos   The list of EXCO members in the CCA.
+     */
+    public void showResidentsInCca(String ccaName, ArrayList<Resident> members, ArrayList<Resident> excos) {
+        // Top divider
+        System.out.println("_________________________________________________________________________________");
+
+        // Check if the CCA is empty
+        if (members == null || members.isEmpty()) {
+            System.out.println("There are currently no residents registered in " + ccaName + ".");
+        } else {
+            System.out.println("Here is the list of residents in " + ccaName + ":");
+
+            // Loop through the members and print them
+            for (int i = 0; i < members.size(); i++) {
+                Resident r = members.get(i);
+
+                // If the resident is in the excos list, give them a cool tag
+                String prefix = (excos != null && excos.contains(r)) ? "[EXCO] " : "";
+
+                System.out.println((i + 1) + ". " + prefix + r.getName() + " (" + r.getMatricNumber() + ")");
+            }
+        }
+
+        // Bottom divider
+        System.out.println("_________________________________________________________________________________");
+    }
+
     public String getLastMessage() {
         return lastMessage;
     }

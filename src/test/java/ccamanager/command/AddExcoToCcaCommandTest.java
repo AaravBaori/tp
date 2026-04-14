@@ -26,10 +26,11 @@ public class AddExcoToCcaCommandTest {
 
     @Test
     void executeAddExcoToCcasuccess(){
-        new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, eventManager, ui);
+        new AddCcaCommand("Basketball", CcaLevel.HIGH)
+                .execute(ccaManager, residentManager, eventManager, ui);
         new AddResidentCommand("John", "A1234567B")
                 .execute(ccaManager, residentManager, eventManager, ui);
-        new AddExcoToCcaCommand("A1234567B", "Basketball","3")
+        new AddExcoToCcaCommand("A1234567B", "Basketball")
                 .execute(ccaManager, residentManager, eventManager, ui);
         assertEquals("Resident John | A1234567B was added as an EXCO to CCA: Basketball",
                 ui.getLastMessage());
@@ -37,32 +38,35 @@ public class AddExcoToCcaCommandTest {
 
     @Test
     void executeAddExcoToCcaCommandccaNotFound(){
-        new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, eventManager, ui);
+        new AddCcaCommand("Basketball", CcaLevel.HIGH)
+                .execute(ccaManager, residentManager, eventManager, ui);
         new AddResidentCommand("John", "A1234567B")
                 .execute(ccaManager, residentManager, eventManager, ui);
-        new AddExcoToCcaCommand("A1234568B", "Football","4")
+        new AddExcoToCcaCommand("A1234568B", "Football")
                 .execute(ccaManager, residentManager, eventManager, ui);
         assertEquals("Football not found.", ui.getLastMessage());
     }
 
     @Test
     void executeAddExcoToCcaresidentNotFound(){
-        new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, eventManager, ui);
+        new AddCcaCommand("Basketball", CcaLevel.HIGH).
+                execute(ccaManager, residentManager, eventManager, ui);
         new AddResidentCommand("John", "A1234567B")
                 .execute(ccaManager, residentManager, eventManager, ui);
-        new AddExcoToCcaCommand("A1234568A", "Basketball","10")
+        new AddExcoToCcaCommand("A1234568A", "Basketball")
                 .execute(ccaManager, residentManager, eventManager, ui);
         assertEquals("A1234568A not found.", ui.getLastMessage());
     }
 
     @Test
     void executeAddExcoToCcaResidentAlreadyInExco(){
-        new AddCcaCommand("Basketball", CcaLevel.HIGH).execute(ccaManager, residentManager, eventManager, ui);
+        new AddCcaCommand("Basketball", CcaLevel.HIGH)
+                .execute(ccaManager, residentManager, eventManager, ui);
         new AddResidentCommand("John", "A1234567B")
                 .execute(ccaManager, residentManager, eventManager, ui);
-        new AddExcoToCcaCommand("A1234567B", "Basketball","3")
+        new AddExcoToCcaCommand("A1234567B", "Basketball")
                 .execute(ccaManager, residentManager, eventManager, ui);
-        new AddExcoToCcaCommand("A1234567B", "Basketball","4")
+        new AddExcoToCcaCommand("A1234567B", "Basketball")
                 .execute(ccaManager, residentManager, eventManager, ui);
         assertEquals("Resident John is already a EXCO of Basketball.", ui.getLastMessage());
     }

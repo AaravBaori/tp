@@ -12,10 +12,10 @@ import ccamanager.ui.Ui;
 /**
  * Command to view the list of all the residents
  */
-public class ViewCcaExco extends Command {
+public class ViewCcaExcoCommand extends Command {
     private String ccaName;
 
-    public ViewCcaExco(String ccaName){
+    public ViewCcaExcoCommand(String ccaName){
         this.ccaName = ccaName;
     }
     /**

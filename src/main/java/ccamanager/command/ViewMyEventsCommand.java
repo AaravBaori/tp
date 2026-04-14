@@ -12,10 +12,10 @@ import java.util.ArrayList;
 /**
  * Command to view the list of all the events for one resident
  */
-public class ViewMyEvents extends Command {
+public class ViewMyEventsCommand extends Command {
     private String matricNumber;
 
-    public ViewMyEvents(String matricNumber) {
+    public ViewMyEventsCommand(String matricNumber) {
         this.matricNumber = matricNumber;
     }
 
