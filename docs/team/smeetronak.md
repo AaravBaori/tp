@@ -4,8 +4,6 @@
 
 CCAManager is a CLI-based application designed for Hall Leaders to manage Resident CCA records, track event participation, and analyze performance points efficiently.
 
----
-
 ## Summary of Contributions
 
 ### Enhancements Implemented
@@ -28,29 +26,20 @@ CCAManager is a CLI-based application designed for Hall Leaders to manage Reside
 * **`add-resident-to-cca` Command:** Implemented the command to associate residents with specific CCAs, including validation to prevent duplicate associations and informative error messages for invalid inputs.
 * Assisted teammates in implementing other commands, ensuring consistency with the parsing and exception-handling patterns established.
 
----
-
 ### Contributions to the User Guide
 * Wrote the section on **Exception and Error Handling**, documenting all error messages users may encounter and how to resolve them.
 * Wrote the section on **Data Storage**, explaining how application data is persisted across sessions and how to handle corrupted or missing save files.
 * Contributed to the documentation of **CCA Management** commands, including `add-resident-to-cca`.
 
----
-
 ### Contributions to the Developer Guide
 * **Storage Architecture:** Documented the design of the persistence layer, including class responsibilities, how data is serialised and deserialised, and how the storage layer interfaces with the rest of the application.
 * **Exception Architecture:** Documented the custom exception hierarchy, explaining when each exception is thrown, how it propagates, and how it is caught and surfaced to the user.
-
----
 
 ### Contributions to Team-Based Tasks
 * **PR Reviews & Merges:** Reviewed and merged a significant number of pull requests throughout the project, ensuring code quality and consistency with the established architecture.
 * **Bug & Issue Management:** Actively tracked, triaged, and resolved issues and bugs as they arose, helping the team stay unblocked and maintain development momentum.
 * **Deadline Tracking:** Helped teammates keep track of upcoming deadlines and milestones, proactively flagging tasks at risk of being delayed.
 
----
-
 ### Contributions Beyond the Project Team
 * Helped out in the course forum when possible, responding to questions from peers facing similar implementation challenges.
 
----
