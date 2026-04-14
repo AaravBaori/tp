@@ -168,7 +168,7 @@ public class Parser {
             }
 
         case "add-exco-to-cca":
-            if (args.length < 3) {
+            if (args.length < 2) {
                 return new UnknownCommand("Usage: add-exco-to-cca <matric number>; <cca name>");
             }
             if (args[0].isBlank()) {
@@ -176,9 +176,6 @@ public class Parser {
             }
             if (args[1].isBlank()) {
                 return new UnknownCommand("CCA name cannot be empty.");
-            }
-            if (args[2].isBlank()) {
-                return new UnknownCommand("Points cannot be empty.");
             }
             return new AddExcoToCcaCommand(args[0], args[1]);
 

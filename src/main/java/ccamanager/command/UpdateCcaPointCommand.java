@@ -28,12 +28,12 @@ public class UpdateCcaPointCommand extends Command{
     public void execute(CcaManager ccaManager, ResidentManager residentManager, EventManager eventManager, Ui ui) {
         try {
             Cca cca = ccaManager.getCCAList().stream()
-                    .filter(x -> x.getName().equals(ccaName))
+                    .filter(x -> x.getName().equalsIgnoreCase(ccaName))
                     .findFirst()
                     .orElseThrow(() -> new CcaNotFoundException(ccaName + " not found."));
 
             Resident resident = residentManager.getResidentList().stream()
-                    .filter(x -> x.getMatricNumber().equals(matricNumber))
+                    .filter(x -> x.getMatricNumber().equalsIgnoreCase(matricNumber))
                     .findFirst()
                     .orElseThrow(() -> new ResidentNotFoundException(matricNumber + " not found."));
 
