@@ -203,7 +203,7 @@ ________________________________________________________________________________
 
 Add an existing resident to a CCA and assign their points for participation.
 
-Format: `add-resident-to-cca <unique identifier>; <cca name>; <points>`
+Format: `add-resident-to-cca <matric number>; <cca name>; <points>`
 
 Example:
 ```
@@ -219,7 +219,7 @@ ________________________________________________________________________________
 
 View all events that a resident is participating in.
 
-Format: `view-my-events <unique identifier>`
+Format: `view-my-events <matric number>`
 
 Example:
 
@@ -242,7 +242,7 @@ ________________________________________________________________________________
 
 Add a new resident into the system.
 
-Format: `add-resident <resident name>; <unique identifier>`
+Format: `add-resident <resident name>; <matric number>`
 
 Example:
 
@@ -279,7 +279,7 @@ ________________________________________________________________________________
 
 Delete an existing resident from the system.
 
-Format: `delete-resident <unique identifier>`
+Format: `delete-resident <matric number>`
 
 Example:
 
@@ -354,7 +354,7 @@ Updates the points of a resident for a specified CCA.
 
 **Format:**
 
-`update-point <unique identifier>; <cca name>; <points>`
+`update-point <matric number>; <cca name>; <points>`
 
 **Example:**
 
@@ -393,7 +393,7 @@ ________________________________________________________________________________
 
 Assigns a resident as an Executive Committee member for a specific CCA.
 
-Format: `add-exco-to-cca <unique identifier>; <cca name>`
+Format: `add-exco-to-cca <matric number>; <cca name>`
 
 Example:
 
@@ -476,23 +476,23 @@ ________________________________________________________________________________
 > add-cca <name>; <level (HIGH, MEDIUM, LOW, UNKNOWN)>
 > delete-cca <name>
 > view-cca
-> add-exco-to-cca <unique identifier>; <cca name>
+> add-exco-to-cca <matric number>; <cca name>
 > view-exco
 > cca-stats
 
 [Resident Management]
-> add-resident <name>; <unique identifier>
-> delete-resident <unique identifier>
+> add-resident <name>; <matric number>
+> delete-resident <matric number>
 > view-resident
-> add-resident-to-cca <unique identifier>; <cca name>; <points>
+> add-resident-to-cca <matric number>; <cca name>; <points>
 > view-points
 > resident-stats
 
 [Event Management]
 > add-event <name>; <cca name>; <date (YYYY-MM-DD)>
-> add-resident-to-event <unique identifier>; <event name>; <cca name>
+> add-resident-to-event <matric number>; <event name>; <cca name>
 > view-cca-events <cca name>
-> view-my-events <unique identifier>
+> view-my-events <matric number>
 
 [General]
 > help
@@ -508,21 +508,21 @@ ________________________________________________________________________________
 > add-cca <name>; <level (HIGH, MEDIUM, LOW)>
 > delete-cca <name>
 > view-cca
-> add-exco-to-cca <unique identifier>; <cca name>
+> add-exco-to-cca <matric number>; <cca name>
 > view-exco
 > cca-stats
 
-> add-resident <name>; <unique identifier>
-> delete-resident <unique identifier>
+> add-resident <name>; <matric number>
+> delete-resident <matric number>
 > view-resident
-> add-resident-to-cca <unique identifier>; <cca name>; <points>
+> add-resident-to-cca <matric number>; <cca name>; <points>
 > view-points
 > resident-stats
 
 > add-event <name>; <cca name>; <date (YYYY-MM-DD)>
-> add-resident-to-event <unique identifier>; <event name>; <cca name>
+> add-resident-to-event <matric number>; <event name>; <cca name>
 > view-cca-events <cca name>
-> view-my-events <unique identifier>
+> view-my-events <matric number>
 
 > help
 > bye
