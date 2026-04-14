@@ -23,8 +23,8 @@ CCAManager is a CLI-based application designed for Hall Leaders to manage Reside
 * Implemented `add-resident-to-cca`, including duplicate validation and error messaging. Assisted teammates in implementing other commands consistently with established patterns.
 
 ### Contributions to the User Guide
-* Wrote sections on **Exception and Error Handling** and **Data Storage**.
-* Contributed to **CCA Management** command documentation, including `add-resident-to-cca`.
+* Verified existing commands for accuracy and corrected incorrect command documentation throughout the UG.
+* Added documentation for missing commands, including `add-resident-to-cca`, `delete-cca`, and others.
 
 ### Contributions to the Developer Guide
 * Documented the **Storage Architecture** — class responsibilities, serialisation/deserialisation, and interface with the rest of the application.
