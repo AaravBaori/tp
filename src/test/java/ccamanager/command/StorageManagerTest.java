@@ -390,6 +390,8 @@ class StorageManagerTest {
         assertEquals("Training", eventManager.getEventList().get(0).getEventName());
     }
 
+
+
     @Test
     void load_duplicateCcaInFile_secondSkipped() throws Exception, ResidentAlreadyInEventException {
         Files.createDirectories(DATA_DIR);
@@ -410,6 +412,7 @@ class StorageManagerTest {
         assertEquals(1, residentManager.getResidentList().size());
         assertEquals("Alice", residentManager.getResidentList().get(0).getName());
     }
+
 
     @Test
     void save_calledTwice_secondSaveOverwritesFirst() throws Exception, ResidentAlreadyInEventException {
