@@ -45,3 +45,5 @@ CCAManager is a CLI-based application designed for Hall Leaders to manage Reside
 * Provided user stories.
 * Challenged design considerations.
 * Took responsibility of presenting weekly tasks during team meetings.
+* [Reviewed and merged PRs of teammates.](https://github.com/AY2526S2-CS2113-W13-1/tp/pulls?q=is%3Apr+reviewed-by%3A%40RehaanMahmood)
+* Fixed issues and bugs.
